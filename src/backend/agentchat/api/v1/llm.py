@@ -1,3 +1,19 @@
+"""
+大语言模型管理 API 端点模块
+
+该模块提供大语言模型 (LLM) 相关的 REST API 端点，包括：
+- LLM 模型的创建、查询、更新和删除
+- 模型配置管理（API密钥、基础URL等）
+- 模型类型和提供商管理
+- 用户权限验证
+
+支持的模型类型：
+- OpenAI GPT 系列
+- Claude 系列
+- 本地部署模型
+- 其他兼容 OpenAI API 的模型
+"""
+
 from typing import Optional
 from loguru import logger
 from fastapi import APIRouter, Depends, Body
@@ -7,6 +23,7 @@ from agentchat.schema.schemas import UnifiedResponseModel, resp_200, resp_500
 
 from agentchat.api.services.llm import LLMService, LLM_Types
 
+# 创建LLM相关的路由器，设置标签为 "LLM"
 router = APIRouter(tags=["LLM"])
 
 
@@ -14,6 +31,22 @@ router = APIRouter(tags=["LLM"])
 async def create_llm(*,
                      llm_request: CreateLLMRequest = Body(),
                      login_user: UserPayload = Depends(get_login_user)):
+    """
+    创建新的大语言模型配置
+    
+    根据用户提供的配置信息创建一个新的 LLM 模型配置，
+    包括模型名称、API密钥、基础URL、提供商等信息。
+    
+    Args:
+        llm_request (CreateLLMRequest): 创建LLM的请求参数
+        login_user (UserPayload): 当前登录用户信息
+        
+    Returns:
+        UnifiedResponseModel: 创建结果，成功返回200状态码
+        
+    Raises:
+        Exception: 当创建过程中出现错误时抛出
+    """
     try:
         await LLMService.create_llm(model=llm_request.model, api_key=llm_request.api_key,
                                     base_url=llm_request.base_url,

@@ -1,3 +1,19 @@
+"""
+历史记录 API 端点模块
+
+该模块提供历史记录相关的 REST API 端点，包括：
+- 对话历史查询
+- 历史记录管理
+- 消息历史检索
+- 用户历史数据
+
+支持的功能：
+- 对话历史记录查询
+- 历史消息格式化
+- 用户历史数据管理
+- 历史记录权限验证
+"""
+
 from fastapi import Request, APIRouter, Depends, Body, Query
 from agentchat.api.services.history import HistoryService
 from agentchat.api.services.user import get_login_user, UserPayload

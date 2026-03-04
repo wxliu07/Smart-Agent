@@ -1,3 +1,14 @@
+"""
+用户服务模块
+
+该模块提供用户管理相关的核心业务逻辑，包括：
+- 用户认证和授权
+- 密码加密和验证
+- 用户信息管理
+- JWT 令牌处理
+- 权限验证和角色管理
+"""
+
 import json
 import random
 
@@ -22,8 +33,28 @@ from agentchat.utils.JWT import ACCESS_TOKEN_EXPIRE_TIME
 
 
 class UserPayload:
+    """
+    用户载荷类
+    
+    用于封装当前登录用户的基本信息和权限数据。
+    包含用户ID、角色信息和用户名等关键信息。
+    
+    Attributes:
+        user_id (str): 用户唯一标识
+        user_role (str or list): 用户角色，管理员为'string'，普通用户为角色ID列表
+        user_name (str): 用户名
+    """
 
     def __init__(self, **kwargs):
+        """
+        初始化用户载荷对象
+        
+        Args:
+            **kwargs: 包含用户信息的字典参数
+                - user_id: 用户ID
+                - role: 用户角色
+                - user_name: 用户名
+        """
         self.user_id = kwargs.get('user_id')
         self.user_role = kwargs.get('role')
         if self.user_role != 'admin':  # 非管理员用户，需要获取他的角色列表
@@ -32,6 +63,12 @@ class UserPayload:
         self.user_name = kwargs.get('user_name')
 
     def is_admin(self):
+        """
+        检查用户是否为管理员
+        
+        Returns:
+            bool: 如果用户是管理员返回True，否则返回False
+        """
         if self.user_role == 'admin':
             return True
         if isinstance(self.user_role, list):
@@ -42,10 +79,27 @@ class UserPayload:
 
 
 class UserService:
+    """
+    用户服务类
+    
+    提供用户管理的核心业务逻辑，包括用户创建、认证、密码处理等功能。
+    所有方法都是类方法，可以直接通过类名调用。
+    """
 
-    # MD5算法加密
     @classmethod
     def decrypt_md5_password(cls, password: str):
+        """
+        解密并MD5加密密码
+        
+        首先尝试使用RSA私钥解密密码，然后进行MD5哈希处理。
+        如果Redis中没有RSA密钥，则直接对密码进行MD5哈希。
+        
+        Args:
+            password (str): 待处理的密码（可能是RSA加密的）
+            
+        Returns:
+            str: MD5哈希后的密码
+        """
         if value := redis_client.get(RSA_KEY):
             private_key = value[1]
             password = md5_hash(rsa.decrypt(b64decode(password), private_key).decode('utf-8'))
@@ -53,23 +107,55 @@ class UserService:
             password = md5_hash(password)
         return password
 
-    # 使用SHA-256算法进行加密
     @classmethod
     def encrypt_sha256_password(cls, password: str):
+        """
+        使用SHA-256算法加密密码
+        
+        Args:
+            password (str): 原始密码
+            
+        Returns:
+            str: SHA-256哈希后的密码
+        """
         sha256 = hashlib.sha256()
         sha256.update(password.encode('utf-8'))
         encrypted_password = sha256.hexdigest()
         return encrypted_password
 
-    # 验证密码是否匹配
     @classmethod
     def verify_password(cls, password: str, encrypted_password: str):
+        """
+        验证密码是否匹配
+        
+        将输入的密码进行SHA-256加密后与存储的加密密码进行比较。
+        
+        Args:
+            password (str): 用户输入的原始密码
+            encrypted_password (str): 存储的加密密码
+            
+        Returns:
+            bool: 密码匹配返回True，否则返回False
+        """
         return cls.encrypt_sha256_password(password) == encrypted_password
 
     @classmethod
     def create_user(cls, request: Request, login_user: UserPayload, req_data: CreateUserReq):
         """
-        创建用户
+        创建新用户
+        
+        检查用户名是否已存在，如果不存在则创建新用户并分配默认角色。
+        
+        Args:
+            request (Request): HTTP请求对象
+            login_user (UserPayload): 当前登录用户信息
+            req_data (CreateUserReq): 创建用户的请求数据
+            
+        Returns:
+            UserTable: 创建的用户对象
+            
+        Raises:
+            UserNameAlreadyExistError: 当用户名已存在时抛出
         """
         exists_user = UserDao.get_user_by_username(req_data.user_name)
         if exists_user:
@@ -85,6 +171,14 @@ class UserService:
 
     @classmethod
     def get_random_user_avatar(cls):
+        """
+        随机获取用户头像
+        
+        从阿里云OSS的用户头像文件夹中随机选择一个头像。
+        
+        Returns:
+            str: 头像URL，如果没有可用头像则返回空字符串
+        """
         files_url = aliyun_oss.list_files_in_folder("icons/user")
         avatars_url = []
         for file_url in files_url:
@@ -93,6 +187,14 @@ class UserService:
 
     @classmethod
     def get_available_avatars(cls):
+        """
+        获取所有可用的用户头像
+        
+        从阿里云OSS获取用户头像文件夹中的所有头像列表。
+        
+        Returns:
+            list: 头像URL列表
+        """
         files_url = aliyun_oss.list_files_in_folder("icons/user")
         avatars_url = []
         for file_url in files_url:
@@ -101,22 +203,61 @@ class UserService:
 
     @classmethod
     def get_user_info_by_id(cls, user_id):
+        """
+        根据用户ID获取用户信息
+        
+        Args:
+            user_id (str): 用户ID
+            
+        Returns:
+            dict: 用户信息的字典形式
+        """
         user_info = UserDao.get_user(user_id)
         return user_info.to_dict()
 
     @classmethod
     def update_user_info(cls, user_id, user_avatar, user_description):
+        """
+        更新用户信息
+        
+        Args:
+            user_id (str): 用户ID
+            user_avatar (str): 用户头像URL
+            user_description (str): 用户描述
+        """
         UserDao.update_user_info(user_id, user_avatar, user_description)
 
     @classmethod
     def get_user_id_by_name(cls, user_name):
+        """
+        根据用户名获取用户ID
+        
+        Args:
+            user_name (str): 用户名
+            
+        Returns:
+            str: 用户ID
+        """
         user = UserDao.get_user_by_username(user_name)
         return user.user_id
 
 
 async def get_login_user(request: Request, authorize: AuthJWT = Depends()) -> UserPayload:
     """
-    获取当前登录的用户
+    获取当前登录的用户信息
+    
+    这是一个FastAPI依赖注入函数，用于在需要认证的API端点中获取当前用户信息。
+    支持白名单路径的免认证访问。
+    
+    Args:
+        request (Request): HTTP请求对象
+        authorize (AuthJWT): JWT认证对象，由FastAPI依赖注入提供
+        
+    Returns:
+        UserPayload: 当前登录用户的载荷对象
+        
+    Raises:
+        HTTPException: 当JWT认证失败时抛出401异常
     """
     if request.state.is_whitelisted:
         # 白名单路径：直接返回Admin
@@ -132,6 +273,18 @@ async def get_login_user(request: Request, authorize: AuthJWT = Depends()) -> Us
 
 
 def get_user_role(db_user: UserTable):
+    """
+    获取用户的角色信息
+    
+    查询数据库获取用户的角色列表，如果是管理员则返回'admin'，
+    否则返回角色ID列表。
+    
+    Args:
+        db_user (UserTable): 用户数据库对象
+        
+    Returns:
+        str or list: 管理员返回'admin'字符串，普通用户返回角色ID列表
+    """
     # 查询用户的角色列表
     db_user_role = UserRoleDao.get_user_roles(db_user.user_id)
     role = ""
@@ -149,6 +302,20 @@ def get_user_role(db_user: UserTable):
 
 
 def get_user_jwt(db_user: UserTable):
+    """
+    为用户生成JWT令牌
+    
+    根据用户信息生成访问令牌和刷新令牌，用于后续的API认证。
+    
+    Args:
+        db_user (UserTable): 用户数据库对象
+        
+    Returns:
+        tuple: 包含三个元素的元组
+            - access_token (str): JWT访问令牌
+            - refresh_token (str): JWT刷新令牌
+            - role (str or list): 用户角色信息
+    """
     # 查询角色
     role = get_user_role(db_user)
     # 生成JWT令牌

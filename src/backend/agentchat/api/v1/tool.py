@@ -1,3 +1,19 @@
+"""
+工具管理 API 端点模块
+
+该模块提供工具管理相关的 REST API 端点，包括：
+- 工具的创建、查询、更新和删除
+- 工具权限管理
+- 工具可见性控制
+- 用户工具集合
+
+支持的功能：
+- 自定义工具创建
+- 工具权限和可见性管理
+- 用户个人工具集合
+- 系统工具库访问
+"""
+
 from typing import Optional
 from loguru import logger
 from fastapi import APIRouter, Depends, Body

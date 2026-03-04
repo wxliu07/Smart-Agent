@@ -1,3 +1,19 @@
+"""
+灵寻智能代理 API 端点模块
+
+该模块提供灵寻智能代理相关的 REST API 端点，包括：
+- 指导提示生成
+- 任务列表生成
+- 用户反馈处理
+- 智能对话功能
+
+支持的功能：
+- 流式提示生成
+- 反馈驱动的重新生成
+- 智能任务规划
+- 个性化指导服务
+"""
+
 import json
 from fastapi import APIRouter, Depends
 from starlette.responses import StreamingResponse

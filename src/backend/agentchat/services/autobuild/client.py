@@ -12,7 +12,8 @@ from langgraph.graph import StateGraph, START, END
 from loguru import logger
 from pydantic import BaseModel, Field
 
-from agentchat.prompts.llm import agent_guide_word, auto_build_ask_prompt, auto_build_abstract_prompt, create_agent_prompt, \
+from agentchat.prompts.llm import agent_guide_word, auto_build_ask_prompt, auto_build_abstract_prompt, \
+    create_agent_prompt, \
     PROMPT_REACT_BASE
 from agentchat.api.services.agent import AgentService
 from agentchat.api.services.chat import ChatService
@@ -27,9 +28,11 @@ class State(TypedDict):
     description: str
     user_input: str
 
+
 class AgentBaseModel(BaseModel):
     name: str = Field(description='想要创建Agent的名称')
     description: str = Field(description='想要创建Agent的描述信息')
+
 
 def resp_state(name: str = '', description: str = '', user_input: str = ''):
     return {"name": name, "description": description, "user_input": user_input}
@@ -132,8 +135,7 @@ class AutoBuildClient:
             # 根据工具名称去查ID
             tool_id = ToolService.get_id_by_tool_name(func, self.login_user.user_id)
             tools_id.append(tool_id)
-            
-        
+
         AgentService.create_agent(
             name=name,
             logo='img/agent/assistant.png',
@@ -142,7 +144,7 @@ class AutoBuildClient:
             tool_id=tools_id,
             user_id=self.login_user.user_id,
         )
-    
+
     async def _function_call(self, user_input: str, tools: List[Dict]):
         messages = [HumanMessage(content=user_input)]
         message = self.base_agent.ainvoke(
@@ -153,7 +155,7 @@ class AutoBuildClient:
             if message.additional_kwargs:
                 function_name = message.additional_kwargs["function_call"]["name"]
                 arguments = json.loads(message.additional_kwargs["function_call"]["arguments"])
-    
+
                 logger.info(f"function call result: \n function_name: {function_name} \n arguments: {arguments}")
                 return function_name, arguments
         except Exception as err:
@@ -183,8 +185,6 @@ class AutoBuildClient:
         tools_name, _, _ = parse_tools_call(resp)
 
         return tools_name
-
-
 
     async def init_graph(self):
 
@@ -292,10 +292,3 @@ class AutoBuildClient:
         self.builder_graph.add_edge('receive_input_description', 'abstract_description')
         self.builder_graph.add_edge('abstract_description', 'auto_create_agent')
         self.builder_graph.add_edge('auto_create_assistant', END)
-
-
-
-
-
-
-

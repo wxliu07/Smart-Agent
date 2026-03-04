@@ -1,3 +1,15 @@
+"""
+用户管理 API 端点模块
+
+该模块提供用户相关的 REST API 端点，包括：
+- 用户注册和登录
+- 用户信息查询和更新
+- JWT 令牌管理
+- 用户认证和权限验证
+
+所有端点都使用统一的响应格式，并提供完整的错误处理机制。
+"""
+
 from typing import Optional
 
 from fastapi import APIRouter, HTTPException, Depends, Body
@@ -15,6 +27,7 @@ from loguru import logger
 from agentchat.api.services.user import get_user_jwt
 from agentchat.utils.constants import USER_CURRENT_SESSION
 
+# 创建用户相关的路由器，设置标签为 "User"
 router = APIRouter(tags=["User"])
 
 
@@ -22,6 +35,23 @@ router = APIRouter(tags=["User"])
 async def register(user_name: str = Body(description='用户名'),
                    user_email: Optional[str] = Body(description='用户邮箱'),
                    user_password: str = Body(description='用户密码')):
+    """
+    用户注册接口
+    
+    创建新用户账户，包括用户名、邮箱和密码信息。
+    如果是第一个用户，则自动分配管理员权限。
+    
+    Args:
+        user_name (str): 用户名，长度不能超过20个字符
+        user_email (Optional[str]): 用户邮箱，可选参数
+        user_password (str): 用户密码，将进行SHA-256加密存储
+        
+    Returns:
+        UnifiedResponseModel: 统一响应格式，注册成功返回200状态码
+        
+    Raises:
+        HTTPException: 当用户名已存在或注册过程中出现错误时抛出
+    """
     # 验证码校验
     # if userConfig.USE_CAPTCHA:
     #     if not user.captcha_key or not await verify_captcha(user.captcha, user.captcha_key):

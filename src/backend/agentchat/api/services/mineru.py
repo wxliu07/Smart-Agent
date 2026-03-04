@@ -1,3 +1,18 @@
+"""
+MinerU 文档解析服务模块
+
+该模块提供基于 MinerU 的文档解析功能，包括：
+- PDF 文档转换为 Markdown
+- Office 文档解析
+- 图片文档处理
+- 多格式文档支持
+
+主要功能：
+- 支持多种文档格式（PDF、Word、Excel、PPT、图片等）
+- 自动文档格式检测和转换
+- 高质量的文档内容提取
+"""
+
 import os
 import shutil
 import tempfile
@@ -12,6 +27,21 @@ from magic_pdf.utils.office_to_pdf import convert_file_to_pdf
 
 
 def convert_pdf_to_markdown(path, output_dir, method="auto", lang=None, debug_able=False, start_page_id=0, end_page_id=None):
+    """
+    将文档转换为 Markdown 格式
+    
+    支持多种文档格式的转换，包括 PDF、Office 文档和图片。
+    使用 MinerU 进行高质量的文档内容提取。
+    
+    Args:
+        path: 文档文件路径
+        output_dir: 输出目录
+        method: 解析方法，默认为 "auto"
+        lang: 语言设置
+        debug_able: 是否启用调试模式
+        start_page_id: 起始页码
+        end_page_id: 结束页码
+    """
     os.makedirs(output_dir, exist_ok=True)
     temp_dir = tempfile.mkdtemp()
 

@@ -1,8 +1,26 @@
+"""
+MCP STDIO 服务器服务模块
+
+该模块提供 MCP STDIO 服务器管理的核心业务逻辑，包括：
+- MCP STDIO 服务器的创建、查询、更新和删除
+- 服务器路径和命令配置
+- 服务器环境变量管理
+- 服务器权限验证
+
+所有方法都是类方法，可以直接通过类名调用。
+"""
+
 from agentchat.database.dao.mcp_stdio_server import MCPServerStdioDao
 from agentchat.database.models.user import AdminUser
 from loguru import logger
 
 class MCPServerService:
+    """
+    MCP STDIO 服务器服务类
+    
+    提供 MCP STDIO 服务器管理的核心业务逻辑，包括服务器的 CRUD 操作和配置管理。
+    所有方法都是类方法，可以直接通过类名调用。
+    """
 
     @classmethod
     def create_mcp_server(cls, name: str, mcp_server_path: str,

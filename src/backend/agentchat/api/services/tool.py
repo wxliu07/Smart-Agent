@@ -1,3 +1,15 @@
+"""
+工具服务模块
+
+该模块提供工具管理的核心业务逻辑，包括：
+- 工具的创建、查询、更新和删除
+- 工具权限验证
+- 用户工具关联管理
+- 工具分类和标签管理
+
+所有方法都是类方法，可以直接通过类名调用。
+"""
+
 from agentchat.database import SystemUser
 from agentchat.database.models.user import AdminUser
 from agentchat.database.dao.tool import ToolDao
@@ -7,6 +19,12 @@ from loguru import logger
 
 
 class ToolService:
+    """
+    工具服务类
+    
+    提供工具管理的核心业务逻辑，包括工具的 CRUD 操作和权限管理。
+    所有方法都是类方法，可以直接通过类名调用。
+    """
 
     @classmethod
     async def create_tool(cls, user_id: str, zh_name: str, en_name: str, description: str, logo_url: str):

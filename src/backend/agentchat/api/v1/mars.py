@@ -1,3 +1,20 @@
+"""
+Mars 智能代理 API 端点模块
+
+该模块提供 Mars 智能代理相关的 REST API 端点，包括：
+- Mars 代理对话功能
+- 自动构建代理
+- 深度搜索功能
+- AI 新闻生成
+- 知识查询功能
+
+支持的功能：
+- 流式对话响应
+- 多种代理模式切换
+- 记忆功能集成
+- 智能工具调用
+"""
+
 from typing import List
 
 from fastapi import FastAPI, APIRouter, Body, Depends

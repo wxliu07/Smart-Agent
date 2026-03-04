@@ -1,3 +1,16 @@
+"""
+知识库文件服务模块
+
+该模块提供知识库文件管理的核心业务逻辑，包括：
+- 文件上传和解析
+- 文档分块和向量化
+- 文件状态管理
+- 文件删除和清理
+- RAG 索引构建
+
+所有方法都是类方法，可以直接通过类名调用。
+"""
+
 from uuid import uuid4
 
 from loguru import logger
@@ -9,6 +22,12 @@ from agentchat.services.rag_handler import RagHandler
 from agentchat.settings import app_settings
 
 class KnowledgeFileService:
+    """
+    知识库文件服务类
+    
+    提供知识库文件管理的核心业务逻辑，包括文件上传、解析、索引和删除。
+    所有方法都是类方法，可以直接通过类名调用。
+    """
     @classmethod
     def parse_knowledge_file(cls):
         """使用 miner u 进行解析PDF，然后进行切割"""

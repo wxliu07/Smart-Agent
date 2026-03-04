@@ -1,3 +1,19 @@
+"""
+使用统计 API 端点模块
+
+该模块提供使用统计相关的 REST API 端点，包括：
+- Token 使用量统计
+- 代理和模型使用分析
+- 用户使用情况报告
+- 使用数据可视化
+
+支持的功能：
+- 按代理和模型统计使用量
+- Token 消耗统计
+- 使用趋势分析
+- 用户行为报告
+"""
+
 from fastapi import APIRouter, Depends, HTTPException
 
 from agentchat.api.services.usage_stats import UsageStatsService

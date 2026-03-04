@@ -1,3 +1,15 @@
+"""
+AI 代理服务模块
+
+该模块提供 AI 代理管理的核心业务逻辑，包括：
+- 代理的创建、查询、更新和删除
+- 代理配置管理（工具、知识库、LLM等）
+- 代理权限验证
+- 代理用户关联管理
+
+所有方法都是类方法，可以直接通过类名调用。
+"""
+
 from agentchat.database.dao.agent import AgentDao
 from agentchat.database.dao.dialog import DialogDao
 from agentchat.database.models.user import AdminUser, SystemUser
@@ -7,6 +19,12 @@ from agentchat.schema.schemas import resp_200, resp_500
 
 
 class AgentService:
+    """
+    AI 代理服务类
+    
+    提供代理管理的核心业务逻辑，包括代理的 CRUD 操作和权限管理。
+    所有方法都是类方法，可以直接通过类名调用。
+    """
 
     @classmethod
     async def create_agent(cls, name: str, description: str, logo_url: str, user_id: str, knowledge_ids: List[str],

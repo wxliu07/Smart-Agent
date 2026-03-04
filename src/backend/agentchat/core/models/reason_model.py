@@ -24,7 +24,6 @@ class ReasoningModel:
         )
         return response
 
-
     def convert_message_to_dict(self, message: BaseMessage) -> dict:
         """Convert a message to a dictionary that can be passed to the API."""
         message_dict: Dict[str, Any]

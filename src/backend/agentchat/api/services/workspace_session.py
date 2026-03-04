@@ -1,3 +1,15 @@
+"""
+工作空间会话服务模块
+
+该模块提供工作空间会话管理的核心业务逻辑，包括：
+- 会话的创建、查询、更新和删除
+- 会话上下文管理
+- 会话历史记录
+- 用户会话状态维护
+
+所有方法都是类方法，可以直接通过类名调用。
+"""
+
 from typing import List
 
 from agentchat.database.dao.workspace_session import WorkSpaceSession, WorkSpaceSessionDao
@@ -5,6 +17,12 @@ from agentchat.database.models.workspace_session import WorkSpaceSessionCreate
 
 
 class WorkSpaceSessionService:
+    """
+    工作空间会话服务类
+    
+    提供工作空间会话管理的核心业务逻辑，包括会话的 CRUD 操作和上下文管理。
+    所有方法都是类方法，可以直接通过类名调用。
+    """
 
     @classmethod
     async def create_workspace_session(cls, session_create: WorkSpaceSessionCreate):

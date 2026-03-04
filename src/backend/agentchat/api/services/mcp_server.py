@@ -1,3 +1,15 @@
+"""
+MCP 服务器服务模块
+
+该模块提供 MCP (Model Context Protocol) 服务器管理的核心业务逻辑，包括：
+- MCP 服务器的创建、查询、更新和删除
+- 服务器配置管理
+- 工具和参数配置
+- 服务器权限验证
+
+所有方法都是类方法，可以直接通过类名调用。
+"""
+
 from datetime import datetime, timedelta
 
 import pytz
@@ -8,6 +20,12 @@ from agentchat.database.models.user import AdminUser, SystemUser
 
 
 class MCPService:
+    """
+    MCP 服务器服务类
+    
+    提供 MCP 服务器管理的核心业务逻辑，包括服务器的 CRUD 操作和配置管理。
+    所有方法都是类方法，可以直接通过类名调用。
+    """
 
     @classmethod
     async def create_mcp_server(cls, server_name: str, user_id: str, user_name: str,

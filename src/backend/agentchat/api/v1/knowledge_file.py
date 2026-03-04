@@ -1,3 +1,19 @@
+"""
+知识库文件管理 API 端点模块
+
+该模块提供知识库文件管理相关的 REST API 端点，包括：
+- 文件上传和下载
+- 文件解析和索引
+- 文件状态管理
+- 文件权限验证
+
+支持的功能：
+- 多格式文件上传
+- 文件自动解析和向量化
+- 文件状态跟踪
+- OSS 云存储集成
+"""
+
 import os
 from urllib.parse import urlparse
 from fastapi import FastAPI, APIRouter, Body, Depends, Query

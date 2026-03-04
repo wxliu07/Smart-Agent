@@ -1,3 +1,19 @@
+"""
+微信集成 API 端点模块
+
+该模块提供微信集成相关的 REST API 端点，包括：
+- 微信服务器验证
+- 微信消息接收和处理
+- 微信客服消息发送
+- 微信用户交互
+
+支持的功能：
+- 微信公众号集成
+- 消息自动回复
+- 用户会话管理
+- 微信特有功能支持
+"""
+
 import asyncio
 from loguru import logger
 from fastapi import APIRouter, Request, Response

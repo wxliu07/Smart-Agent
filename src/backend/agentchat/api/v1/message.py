@@ -1,3 +1,19 @@
+"""
+消息反馈 API 端点模块
+
+该模块提供消息反馈相关的 REST API 端点，包括：
+- 消息点赞功能
+- 消息踩踏功能
+- 用户反馈收集
+- 消息质量统计
+
+支持的功能：
+- 用户对消息的点赞和踩踏
+- 消息质量反馈收集
+- 用户行为数据分析
+- 消息优化改进
+"""
+
 from fastapi import APIRouter, Request
 from agentchat.api.services.message import MessageLikeService, MessageDownService
 from agentchat.schema.schemas import resp_200

@@ -1,3 +1,15 @@
+"""
+MCP 代理服务模块
+
+该模块提供 MCP (Model Context Protocol) 代理管理的核心业务逻辑，包括：
+- MCP 代理的创建、查询、更新和删除
+- MCP 代理配置管理
+- MCP 服务器集成
+- 代理权限验证
+
+所有方法都是类方法，可以直接通过类名调用。
+"""
+
 from agentchat.database.dao.mcp_agent import MCPAgentDao
 from agentchat.database.models.user import AdminUser, SystemUser
 from loguru import logger
@@ -6,6 +18,12 @@ from agentchat.schema.schemas import resp_200, resp_500
 
 
 class MCPAgentService:
+    """
+    MCP 代理服务类
+    
+    提供 MCP 代理管理的核心业务逻辑，包括代理的 CRUD 操作和服务器集成。
+    所有方法都是类方法，可以直接通过类名调用。
+    """
 
     @classmethod
     def create_mcp_agent(cls, name: str, description: str, logo: str, user_id: str, knowledges_id: List[str],

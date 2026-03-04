@@ -1,3 +1,21 @@
+"""
+聊天对话 API 端点模块
+
+该模块提供聊天和对话相关的 REST API 端点，包括：
+- 对话创建和管理
+- 消息发送和接收
+- 流式聊天响应
+- 文件上传和处理
+- 对话历史管理
+
+支持的功能：
+- 实时流式响应
+- 文件附件上传
+- 多模态消息处理
+- 对话中断和恢复
+- 记忆功能集成
+"""
+
 import json
 import loguru
 from starlette.types import Receive
@@ -17,12 +35,22 @@ from fastapi.responses import StreamingResponse
 
 from agentchat.utils.helpers import combine_user_input, combine_history_messages
 
+# 创建聊天相关的路由器，设置标签为 "Completion"
 router = APIRouter(tags=["Completion"])
 
 """
 重写 StreamingResponse类 保证流式输出的时候可随时暂停
 """
 class WatchedStreamingResponse(StreamingResponse):
+    """
+    可监控的流式响应类
+    
+    扩展了 FastAPI 的 StreamingResponse，添加了客户端断开连接的监听功能。
+    当客户端断开连接时，可以触发回调函数来清理资源或停止后台任务。
+    
+    Attributes:
+        callback (Callable): 客户端断开连接时的回调函数
+    """
     def __init__(self,
                  content,
                  callback: Callable = None,

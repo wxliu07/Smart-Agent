@@ -1,3 +1,20 @@
+"""
+AI 代理管理 API 端点模块
+
+该模块提供 AI 代理相关的 REST API 端点，包括：
+- 代理的创建、查询、更新和删除
+- 代理配置管理（工具、知识库、LLM等）
+- 代理权限控制
+- 代理状态管理
+
+支持的功能：
+- 自定义代理创建
+- 代理配置的动态调整
+- 多种工具和知识库集成
+- MCP 服务器支持
+- 记忆功能配置
+"""
+
 from fastapi import APIRouter, Form, UploadFile, File, Depends, Body
 
 from agentchat.api.services.agent import AgentService
@@ -10,12 +27,29 @@ from typing import List
 from loguru import logger
 from uuid import uuid4
 
+# 创建代理相关的路由器，设置标签为 "Agent"
 router = APIRouter(tags=["Agent"])
 
 
 @router.post("/agent", response_model=UnifiedResponseModel)
 async def create_agent(agent_request: CreateAgentRequest = Body(),
                        login_user: UserPayload = Depends(get_login_user)):
+    """
+    创建新的 AI 代理
+    
+    根据用户提供的配置信息创建一个新的 AI 代理，包括名称、描述、
+    关联的工具、知识库、LLM 模型等配置。
+    
+    Args:
+        agent_request (CreateAgentRequest): 创建代理的请求参数
+        login_user (UserPayload): 当前登录用户信息
+        
+    Returns:
+        UnifiedResponseModel: 创建结果，成功返回200状态码
+        
+    Raises:
+        Exception: 当代理名称重复或创建过程中出现错误时抛出
+    """
     try:
         # 判断Agent名称是否重复
         if await AgentService.check_repeat_name(name=agent_request.name, user_id=login_user.user_id):

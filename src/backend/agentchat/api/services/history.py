@@ -1,3 +1,15 @@
+"""
+历史记录服务模块
+
+该模块提供聊天历史记录管理的核心业务逻辑，包括：
+- 历史记录的创建和查询
+- 消息格式转换（数据库记录到LangChain消息）
+- 对话历史检索
+- 记忆功能集成
+
+所有方法都是类方法，可以直接通过类名调用。
+"""
+
 from typing import List
 from uuid import uuid4
 
@@ -10,11 +22,19 @@ from agentchat.services.rag.vector_db import milvus_client
 from agentchat.schema.chunk import ChunkModel
 from agentchat.utils.helpers import get_now_beijing_time
 
+# 助手角色标识
 Assistant_Role = "assistant"
+# 用户角色标识
 User_Role = "user"
 
 
 class HistoryService:
+    """
+    历史记录服务类
+    
+    提供聊天历史记录管理的核心业务逻辑，包括记录的 CRUD 操作和消息格式转换。
+    所有方法都是类方法，可以直接通过类名调用。
+    """
 
     @classmethod
     async def create_history(cls, role: str, content: str, events: List[dict], dialog_id: str):

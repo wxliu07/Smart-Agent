@@ -1,3 +1,19 @@
+"""
+知识库管理 API 端点模块
+
+该模块提供知识库管理相关的 REST API 端点，包括：
+- 知识库的创建、查询、更新和删除
+- 知识库文件管理
+- 知识库权限验证
+- RAG 检索功能
+
+支持的功能：
+- 用户知识库管理
+- 知识库文件上传和处理
+- 知识库检索和查询
+- 权限控制和安全验证
+"""
+
 from typing import Union, List
 from loguru import logger
 from fastapi import Body, APIRouter, Depends

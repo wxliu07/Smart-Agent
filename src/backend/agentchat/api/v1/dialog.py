@@ -1,3 +1,19 @@
+"""
+对话管理 API 端点模块
+
+该模块提供对话管理相关的 REST API 端点，包括：
+- 对话的创建、查询、更新和删除
+- 对话列表管理
+- 对话权限验证
+- 对话与代理的关联
+
+支持的功能：
+- 用户对话列表查询
+- 对话创建和配置
+- 对话删除和清理
+- 权限验证和安全控制
+"""
+
 from loguru import logger
 from fastapi import APIRouter, Depends, Body
 from agentchat.api.services.agent import AgentService

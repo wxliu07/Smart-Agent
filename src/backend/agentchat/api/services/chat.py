@@ -1,3 +1,19 @@
+"""
+聊天服务模块
+
+该模块提供聊天和对话管理的核心业务逻辑，包括：
+- AI 代理的创建和配置
+- 流式聊天响应处理
+- 工具调用和事件处理
+- 知识库集成和 RAG 功能
+- MCP (Model Context Protocol) 代理支持
+
+主要组件：
+- StreamAgentState: 流式代理状态管理
+- AgentConfig: 代理配置模型
+- EmitEventAgentMiddleware: 事件发送中间件
+"""
+
 import copy
 import time
 import asyncio
@@ -24,16 +40,45 @@ from agentchat.services.rag_handler import RagHandler
 from agentchat.core.agents.mcp_agent import MCPAgent, MCPConfig
 from agentchat.api.services.mcp_server import MCPService
 
+
 class StreamAgentState(AgentState):
+    """
+    流式代理状态类
+    
+    扩展了基础的 AgentState，添加了流式聊天所需的额外状态字段。
+    
+    Attributes:
+        tool_call_count (NotRequired[int]): 工具调用次数计数
+        model_call_count (NotRequired[int]): 模型调用次数计数  
+        user_id (NotRequired[str]): 用户ID
+        available_tools (NotRequired[List[BaseTool]]): 可用工具列表
+    """
     tool_call_count: NotRequired[int]
     model_call_count: NotRequired[int]
     user_id: NotRequired[str]
     available_tools: NotRequired[List[BaseTool]]
 
 
+# 最大工具数量限制
 MAX_TOOLS_SIZE = 10
 
+
 class AgentConfig(BaseModel):
+    """
+    代理配置模型
+    
+    定义了AI代理的所有配置参数，包括模型、工具、知识库等设置。
+    
+    Attributes:
+        mcp_ids (List[str]): MCP服务器ID列表
+        knowledge_ids (List[str]): 知识库ID列表
+        tool_ids (List[str]): 工具ID列表
+        system_prompt (str): 系统提示词
+        enable_memory (bool): 是否启用记忆功能，默认False
+        name (str): 代理名称，可选
+        user_id (str): 用户ID
+        llm_id (str): 大语言模型ID
+    """
     mcp_ids: List[str]
     knowledge_ids: List[str]
     tool_ids: List[str]
@@ -45,11 +90,17 @@ class AgentConfig(BaseModel):
 
 
 class EmitEventAgentMiddleware(AgentMiddleware):
+    """
+    事件发送代理中间件
+    
+    负责在代理执行过程中发送各种事件，包括工具调用开始/结束、模型调用等。
+    提供了流式响应的事件通知机制。
+    """
     def __init__(self):
         super().__init__()
 
     async def aafter_model(
-        self, state: StreamAgentState, runtime: Runtime
+            self, state: StreamAgentState, runtime: Runtime
     ) -> dict[str, Any] | None:
         last_message = state["messages"][-1]
         if last_message.tool_calls:
@@ -87,7 +138,7 @@ class EmitEventAgentMiddleware(AgentMiddleware):
             "status": "START",
             "title": f"执行可用工具: {request.tool_call["name"]}",
             "message": f"正在调用插件工具 {request.tool_call["name"]}..."
-            })
+        })
         request.state["tool_call_count"] = tool_call_count + 1
         try:
             tool_result = await handler(request)
@@ -95,7 +146,7 @@ class EmitEventAgentMiddleware(AgentMiddleware):
                 "status": "END",
                 "title": f"执行可用工具: {request.tool_call["name"]}",
                 "message": tool_result.content
-                })
+            })
             return tool_result
         except Exception as err:
             writer({
@@ -104,6 +155,7 @@ class EmitEventAgentMiddleware(AgentMiddleware):
                 "message": str(err)
             })
             return ToolMessage(content=str(err), name=request.tool_call["name"], tool_call_id=request.tool_call["id"])
+
 
 class StreamingAgent:
     def __init__(self, agent_config: AgentConfig):
@@ -146,13 +198,12 @@ class StreamingAgent:
         # 仅支持传入response_format为json object的模型
         tool_selector_middleware = LLMToolSelectorMiddleware(
             model=self.tool_invocation_model,
-            max_tools=3 # 限制每次选择最多 3个工具
+            max_tools=3  # 限制每次选择最多 3个工具
         )
 
         emit_event_middleware = EmitEventAgentMiddleware()
 
         return [emit_event_middleware]
-
 
     async def setup_language_model(self):
         # 普通对话模型
@@ -182,6 +233,7 @@ class StreamingAgent:
             1.工具数量较少
             2.一些工具在每次对话都能用到
         """
+
         @tool(parse_docstring=True)
         def search_available_tools(query: str, tool_call_id):
             """
@@ -204,7 +256,8 @@ class StreamingAgent:
             if not found_tools:
                 content_str = "未找到相关工具。请尝试其他关键词。"
             else:
-                content_str = f"已找到并激活以下工具:\n" + "\n".join([tool.name for tool in found_tools]) + "\n\n现在你可以调用这些工具了。"
+                content_str = f"已找到并激活以下工具:\n" + "\n".join(
+                    [tool.name for tool in found_tools]) + "\n\n现在你可以调用这些工具了。"
 
             tool_msg = ToolMessage(
                 content=content_str,
@@ -213,8 +266,8 @@ class StreamingAgent:
             )
 
             return Command(update={"available_tools": found_tools, "messages": [tool_msg]})
-        return search_available_tools
 
+        return search_available_tools
 
     async def setup_tools(self) -> List[BaseTool]:
         tools = []
@@ -227,7 +280,6 @@ class StreamingAgent:
 
     async def setup_mcp_agent_as_tools(self):
         mcp_agent_as_tools = []
-
 
         def create_mcp_agent_as_tool(mcp_agent, mcp_as_tool_name, description):
             @tool(mcp_as_tool_name, description=description)
@@ -242,6 +294,7 @@ class StreamingAgent:
 
                 messages = await mcp_agent.ainvoke([HumanMessage(content=query)])
                 return "\n".join([message.content for message in messages])
+
             return call_mcp_agent
 
         for mcp_id in self.agent_config.mcp_ids:
@@ -251,7 +304,8 @@ class StreamingAgent:
             mcp_agent = MCPAgent(mcp_config, self.agent_config.user_id)
             await mcp_agent.init_mcp_agent()
 
-            mcp_agent_as_tools.append(create_mcp_agent_as_tool(mcp_agent, mcp_server.get("mcp_as_tool_name"), mcp_server.get("description")))
+            mcp_agent_as_tools.append(
+                create_mcp_agent_as_tool(mcp_agent, mcp_server.get("mcp_as_tool_name"), mcp_server.get("description")))
 
         return mcp_agent_as_tools
 
@@ -274,13 +328,13 @@ class StreamingAgent:
 
         self.tools.append(retrival_knowledge)
 
-
     async def astream(self, messages: List[BaseMessage]) -> AsyncGenerator[Dict[str, Any], None]:
         """流式调用主方法"""
         response_content = ""
         try:
             async for token, metadata in self.react_agent.astream(
-                    input={"messages": copy.deepcopy(messages), "model_call_count": 0, "user_id": self.agent_config.user_id},
+                    input={"messages": copy.deepcopy(messages), "model_call_count": 0,
+                           "user_id": self.agent_config.user_id},
                     config={"callbacks": [usage_metadata_callback]},
                     stream_mode=["messages", "custom"],
             ):
@@ -311,4 +365,3 @@ class StreamingAgent:
 
     def stop_streaming_callback(self):
         self.stop_streaming = True
-
