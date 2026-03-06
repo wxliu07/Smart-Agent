@@ -46,8 +46,7 @@ class LingSeekAgent:
         sop_content = ""
         answer = ""
         split_tags = ["<Thought_END>", "</Thought_END>"]
-        async for one in self.conversation_model.astream(input=lingseek_guide_prompt,
-                                                         config={"callbacks": [usage_metadata_callback]}):
+        async for one in self.conversation_model.astream(input=lingseek_guide_prompt, config={"callbacks": [usage_metadata_callback]}):
             answer += f"{one.content}"
             if sop_flag:
                 yield one
@@ -68,16 +67,14 @@ class LingSeekAgent:
     async def _generate_tasks(self, lingseek_task_prompt):
         conversation_json_model = self.conversation_model.bind(response_format={"type": "json_object"})
 
-        response = await conversation_json_model.ainvoke(input=lingseek_task_prompt,
-                                                         config={"callbacks": [usage_metadata_callback]})
+        response = await conversation_json_model.ainvoke(input=lingseek_task_prompt, config={"callbacks": [usage_metadata_callback]})
 
         try:
             content = json.loads(response.content)
             return content
         except Exception as err:
             fix_message = FixJsonPrompt.format(json_content=response.content, json_error=str(err))
-            fix_response = await conversation_json_model.ainvoke(input=fix_message,
-                                                                 config={"callbacks": [usage_metadata_callback]})
+            fix_response = await conversation_json_model.ainvoke(input=fix_message, config={"callbacks": [usage_metadata_callback]})
             try:
                 fix_content = json.loads(fix_response.content)
                 return fix_content
@@ -86,8 +83,7 @@ class LingSeekAgent:
 
     async def _generate_title(self, query):
         title_prompt = GenerateTitlePrompt.format(query=query)
-        response = await self.conversation_model.ainvoke(input=title_prompt,
-                                                         config={"callbacks": [usage_metadata_callback]})
+        response = await self.conversation_model.ainvoke(input=title_prompt, config={"callbacks": [usage_metadata_callback]})
         return response.content
 
     async def _add_workspace_session(self, query, contexts: WorkSpaceSessionContext):
@@ -113,8 +109,7 @@ class LingSeekAgent:
         return tool_messages
 
     async def generate_tasks(self, lingseek_task: LingSeekTask):
-        tools = await self._obtain_lingseek_tools(lingseek_task.plugins, lingseek_task.mcp_servers,
-                                                  lingseek_task.web_search)
+        tools = await self._obtain_lingseek_tools(lingseek_task.plugins, lingseek_task.mcp_servers, lingseek_task.web_search)
         tools_str = json.dumps(tools, ensure_ascii=False, indent=2)
 
         lingseek_task_prompt = GenerateTaskPrompt.format(
@@ -130,8 +125,7 @@ class LingSeekAgent:
     async def generate_guide_prompt(self, lingseek_info: Union[LingSeekGuidePrompt, LingSeekGuidePromptFeedBack],
                                     feedback: bool = False):
 
-        tools = await self._obtain_lingseek_tools(lingseek_info.plugins, lingseek_info.mcp_servers,
-                                                  lingseek_info.web_search)
+        tools = await self._obtain_lingseek_tools(lingseek_info.plugins, lingseek_info.mcp_servers, lingseek_info.web_search)
         tools_str = json.dumps(tools, ensure_ascii=False, indent=2)
 
         if feedback:
@@ -154,6 +148,7 @@ class LingSeekAgent:
                     "chunk": chunk.content
                 }
             }
+
 
     async def submit_lingseek_task(self, lingseek_task: LingSeekTask):
         task = await self.generate_tasks(lingseek_task)
@@ -183,12 +178,11 @@ class LingSeekAgent:
             "data": {"graph": tasks_show}
         }
 
-        tools = await self._obtain_lingseek_tools(lingseek_task.plugins, lingseek_task.mcp_servers,
-                                                  lingseek_task.web_search)
+
+        tools = await self._obtain_lingseek_tools(lingseek_task.plugins, lingseek_task.mcp_servers, lingseek_task.web_search)
         tool_call_model = self.tool_call_model.bind_tools(tools) if len(tools) else self.tool_call_model
 
-        messages: List[BaseMessage] = [SystemMessage(content=SystemMessagePrompt),
-                                       HumanMessage(content=lingseek_task.query)]
+        messages: List[BaseMessage] = [SystemMessage(content=SystemMessagePrompt), HumanMessage(content=lingseek_task.query)]
         context_task = []
         for step_id, step_info in tasks_graph.items():
             step_context = []
@@ -203,15 +197,14 @@ class LingSeekAgent:
                 step_context=str(step_context)
             )
             step_messages = [SystemMessage(content=step_prompt), HumanMessage(content=lingseek_task.query)]
-            response = await tool_call_model.ainvoke(input=step_messages,
-                                                     config={"callbacks": [usage_metadata_callback]})
+            response = await tool_call_model.ainvoke(input=step_messages, config={"callbacks": [usage_metadata_callback]})
 
             tools_messages = await self._parse_function_call_response(response)
 
             step_info.result = "\n".join([msg.content for msg in tools_messages])
 
             context_task.append(step_info.model_dump())
-            if tools_messages:  # 合到整体Messages
+            if tools_messages: # 合到整体Messages
                 messages.append(response)
                 messages.extend(tools_messages)
             else:

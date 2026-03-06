@@ -1,5 +1,6 @@
+import logging
+import warnings
 from contextlib import asynccontextmanager
-
 from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi_jwt_auth import AuthJWT
@@ -12,10 +13,8 @@ from agentchat.middleware.white_list_middleware import WhitelistMiddleware
 from agentchat.settings import initialize_app_settings
 from agentchat.settings import app_settings
 
-import warnings
-
 warnings.filterwarnings("ignore")
-
+logging.getLogger("chromadb").setLevel(logging.WARNING)
 
 async def register_router(app: FastAPI):
     from agentchat.api.router import router
@@ -46,6 +45,7 @@ def register_middleware(app: FastAPI):
     # 注册白名单中间件
     app.add_middleware(WhitelistMiddleware)
 
+
     return app
 
 
@@ -58,13 +58,11 @@ async def init_config():
     await init_default_agent()
     await update_system_mcp_server()
 
-
 def print_logo():
     from pyfiglet import Figlet
 
     f = Figlet(font="slant")
     print(f.renderText("Agent Chat"))
-
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -78,9 +76,11 @@ async def lifespan(app: FastAPI):
 
 
 def create_app():
-    app = FastAPI(title=app_settings.server.get("project_name", "AgentChat"),
-                  version=app_settings.server.get("version", "v2.2.0"),
-                  lifespan=lifespan)
+    app = FastAPI(
+        title=app_settings.server.get("project_name", "AgentChat"),
+        version=app_settings.server.get("version", "v2.3.0"),
+        lifespan=lifespan
+    )
 
     app = register_middleware(app)
 

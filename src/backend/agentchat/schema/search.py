@@ -1,3 +1,4 @@
+
 class SearchModel:
     def __init__(self, chunk_id, content, score, file_id, file_name, update_time, knowledge_id, summary):
         self.chunk_id = chunk_id

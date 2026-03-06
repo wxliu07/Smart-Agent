@@ -5,7 +5,6 @@ from pydantic.v1 import BaseSettings, Field
 
 from agentchat.schema.common import MultiModels, ModelConfig, Tools, Rag
 
-
 class Settings(BaseSettings):
     aliyun_oss: dict = {}
     redis: dict = {}
@@ -23,7 +22,6 @@ class Settings(BaseSettings):
 
 
 app_settings = Settings()
-
 
 async def initialize_app_settings(file_path: str = None):
     global app_settings
@@ -55,6 +53,7 @@ async def initialize_app_settings(file_path: str = None):
                 for rag_name, rag_config in data['rag'].items():
                     setattr(rag_configs, rag_name, rag_config)
                 data['rag'] = rag_configs
+
 
             for key, value in data.items():
                 setattr(app_settings, key, value)

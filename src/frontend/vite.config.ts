@@ -4,7 +4,6 @@ import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
-
 export default defineConfig({
   server: {
     host: '0.0.0.0',
@@ -19,19 +18,6 @@ export default defineConfig({
       }
     },
   },
-
-  css: {
-    preprocessorOptions: {
-      scss: {
-        // 方法1：升级到 modern API（推荐）
-        // api: 'modern',
-        
-        // 方法2：如果要用 legacy，静默警告
-        silenceDeprecations: ['legacy-js-api'],
-      }
-    }
-  },
-
   plugins: [vue(),
     AutoImport({
       resolvers: [ElementPlusResolver()],

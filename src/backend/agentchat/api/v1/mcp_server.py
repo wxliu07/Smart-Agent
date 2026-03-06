@@ -1,75 +1,75 @@
-"""
-MCP服务器管理API路由模块
-提供MCP服务器的创建、查询、更新、删除等RESTful接口
-支持MCP工具集成和配置管理
-"""
 import json
-from typing import Optional
-
+from loguru import logger
 from fastapi import APIRouter, Body, Depends
 
 from agentchat.api.services.mcp_server import MCPService
 from agentchat.api.services.user import UserPayload, get_login_user
 from agentchat.prompts.mcp import McpAsToolPrompt
-from agentchat.schema.mcp import MCPResponseFormat
+from agentchat.schema.mcp import MCPResponseFormat, MCPServerImportedReq, MCPServerUpdateReq
 from agentchat.schema.schemas import resp_500, resp_200
 from agentchat.core.agents.structured_response_agent import StructuredResponseAgent
 from agentchat.services.mcp.manager import MCPManager
-from loguru import logger
-
+from agentchat.settings import app_settings
 from agentchat.utils.convert import convert_mcp_config
+from agentchat.utils.helpers import parse_imported_config
 
-# 创建MCP服务器相关的API路由器，标签为"MCP-Server"
 router = APIRouter(tags=["MCP-Server"])
 
 
 @router.post("/mcp_server")
-async def create_mcp_server(server_name: str = Body(..., description="MCP Server的名称"),
-                            url: str = Body(..., description="MCP Server 的URL"),
-                            type: str = Body(..., description="MCP Server 的连接方式，SSE、Websocket"),
-                            config: dict = Body(None, description="MCP Server 的配置信息"),
-                            logo_url: Optional[str] = Body("xxxx", description="MCP Server 的LOGO"),
-                            login_user: UserPayload = Depends(get_login_user)):
-    """创建新的MCP服务器"""
+async def create_mcp_server(
+    req: MCPServerImportedReq,
+    login_user: UserPayload = Depends(get_login_user)
+):
     try:
-        # 构建服务器信息字典
+        MCPService.validate_imported_config(req.imported_config)
+        name, info = next(iter(req.imported_config.get("mcpServers", {}).items()))
         server_info = {
-            "server_name": server_name,
-            "type": type,
-            "url": url
+            "server_name": req.server_name or name, # 传入Mcp Server名称优先级更高
+            "type": info.get("type", "sse"),
+            "headers": info.get("headers"),
+            "url": info.get("url")
         }
-        # 创建MCP管理器并获取可用工具
         mcp_manager = MCPManager(
             [convert_mcp_config(server_info)]
         )
         tools_params = await mcp_manager.show_mcp_tools()
-        # 提取工具名称列表
         tools_name_str = []
         for key, tools in tools_params.items():
             for tool in tools:
                 tools_name_str.append(tool["name"])
-        config_enabled = True if config else False  # 检查是否启用配置
 
-        # 使用结构化智能体生成工具描述
+        # 每次更新配置需要修改Mcp As Tool的信息
         structured_agent = StructuredResponseAgent(MCPResponseFormat)
         structured_response = structured_agent.get_structured_response(
-            McpAsToolPrompt.format(tools_info=json.dumps(tools_params, indent=4)))
+            McpAsToolPrompt.format(
+                tools_info=json.dumps(tools_params, indent=4)
+            )
+        )
 
-        # 调用服务层创建MCP服务器
-        await MCPService.create_mcp_server(server_name, login_user.user_id, login_user.user_name, url, type, config,
-                                           tools_name_str, tools_params.get(server_name), config_enabled, logo_url,
-                                           structured_response.mcp_as_tool_name, structured_response.description)
+        await MCPService.create_mcp_server(
+            tools=tools_name_str,
+            url=info.get("url"),
+            config={},
+            type=info.get("type", "sse"),
+            user_id=login_user.user_id,
+            server_name=req.server_name or name,
+            config_enabled=False,
+            logo_url=req.logo_url,
+            params=tools_params.get(req.server_name or name),
+            user_name=login_user.user_name,
+            description=structured_response.description,
+            mcp_as_tool_name=structured_response.mcp_as_tool_name,
+        )
         return resp_200()
     except Exception as err:
-        logger.error(f"create mcp server error: {err}")
+        logger.error(err)
         return resp_500(message=str(err))
 
 
 @router.get("/mcp_server")
 async def get_mcp_servers(login_user: UserPayload = Depends(get_login_user)):
-    """获取当前用户的所有MCP服务器列表"""
     try:
-        # 调用服务层获取用户的所有MCP服务器
         mcp_servers = await MCPService.get_all_servers(login_user.user_id)
         return resp_200(data=mcp_servers)
     except Exception as err:
@@ -78,14 +78,14 @@ async def get_mcp_servers(login_user: UserPayload = Depends(get_login_user)):
 
 
 @router.delete("/mcp_server")
-async def delete_mcp_server(server_id: str = Body(..., description="MCP Server 的ID", embed=True),
-                            login_user: UserPayload = Depends(get_login_user)):
-    """删除指定的MCP服务器"""
+async def delete_mcp_server(
+    server_id: str = Body(..., description="MCP Server 的ID", embed=True),
+    login_user: UserPayload = Depends(get_login_user)
+):
     try:
-        # 验证用户是否有权限删除该服务器
+        # 验证是否有权限
         await MCPService.verify_user_permission(server_id, login_user.user_id)
 
-        # 调用服务层删除服务器
         await MCPService.delete_server_from_id(server_id)
         return resp_200()
     except Exception as err:
@@ -94,14 +94,14 @@ async def delete_mcp_server(server_id: str = Body(..., description="MCP Server �
 
 
 @router.get("/mcp_tools")
-async def get_mcp_tools(server_id: str = Body(..., description="MCP Server 的ID", embed=True),
-                        login_user: UserPayload = Depends(get_login_user)):
-    """获取指定MCP服务器的可用工具列表"""
+async def get_mcp_tools(
+    server_id: str = Body(..., description="MCP Server 的ID", embed=True),
+    login_user: UserPayload = Depends(get_login_user)
+):
     try:
-        # 验证用户是否有权限访问该服务器
+        # 验证是否有权限
         await MCPService.verify_user_permission(server_id, login_user.user_id)
 
-        # 调用服务层获取MCP工具信息
         results = await MCPService.get_mcp_tools_info(server_id)
         return resp_200(results)
     except Exception as err:
@@ -110,47 +110,78 @@ async def get_mcp_tools(server_id: str = Body(..., description="MCP Server 的ID
 
 
 @router.put("/mcp_server")
-async def update_mcp_server(server_id: str = Body(..., description="MCP Server 的ID"),
-                            server_name: str = Body(None, description="MCP Server的名称"),
-                            url: str = Body(None, description="MCP Server 的URL"),
-                            type: str = Body(None, description="MCP Server 的连接方式，SSE、Websocket"),
-                            login_user: UserPayload = Depends(get_login_user)):
-    """更新指定的MCP服务器信息"""
+async def update_mcp_server(
+    req: MCPServerUpdateReq,
+    login_user: UserPayload = Depends(get_login_user)
+):
     try:
-        # 验证用户是否有权限更新该服务器
-        await MCPService.verify_user_permission(server_id, login_user.user_id)
-        mcp_server = await MCPService.get_mcp_server_from_id(server_id)
+        # 验证是否有权限
+        await MCPService.verify_user_permission(req.server_id, login_user.user_id)
+        mcp_server = await MCPService.get_mcp_server_from_id(req.server_id)
 
-        # 如果URL发生变化，需要重新获取工具信息
-        if url != mcp_server["url"]:
-            server_info = {
-                "server_name": server_name,
-                "type": type,
-                "url": url
-            }
-            # 创建MCP管理器并获取新的工具参数
-            mcp_manager = MCPManager([convert_mcp_config(server_info)])
+        update_data = {}
+        if req.imported_config and req.imported_config != mcp_server["imported_config"]:
+
+            imported_config_info = parse_imported_config(req.imported_config)
+            imported_config_info.name = req.name or imported_config_info.name
+
+            # MCP server 基础信息
+            update_data.update({
+                "server_name": imported_config_info.name,
+                "url": imported_config_info.url,
+                "type": imported_config_info.type,
+                "imported_config": req.imported_config,
+                "logo_url": req.logo_url
+            })
+
+            # tools / params
+            mcp_manager = MCPManager([
+                convert_mcp_config({
+                    "server_name": imported_config_info.name,
+                    "type": imported_config_info.type,
+                    "url": imported_config_info.url,
+                    "headers": imported_config_info.headers
+                })
+            ])
             tools_params = await mcp_manager.show_mcp_tools()
-            # 提取工具名称列表
-            tools_str = []
-            for key, tools in tools_params:
-                for tool in tools:
-                    tools_str.append(tool["name"])
 
-            # 使用结构化智能体生成新的工具描述
+            update_data["tools"] = [
+                tool["name"]
+                for tools in tools_params.values()
+                for tool in tools
+            ]
+            update_data["params"] = tools_params.get(imported_config_info.name)
+
+            # LLM 生成信息
             structured_agent = StructuredResponseAgent(MCPResponseFormat)
             structured_response = structured_agent.get_structured_response(
-                McpAsToolPrompt.format(tools_info=json.dumps(tools_params, indent=4)))
+                McpAsToolPrompt.format(
+                    tools_info=json.dumps(tools_params, indent=4)
+                )
+            )
+            update_data["mcp_as_tool_name"] = structured_response.mcp_as_tool_name
+            update_data["description"] = structured_response.description
 
-            # 调用服务层更新服务器信息（包含新的工具信息）
-            await MCPService.update_mcp_server(server_id, server_name, url, type,
-                                               mcp_as_tool_name=structured_response.mcp_as_tool_name,
-                                               description=structured_response.description, tools=tools_str,
-                                               params=tools_params.get(server_name))
         else:
-            # URL未变化，只更新基本信息
-            await MCPService.update_mcp_server(server_id, server_name)
+            if req.name is not None:
+                update_data["server_name"] = req.name
+            if req.logo_url is not None:
+                update_data["logo_url"] = req.logo_url
+
+        await MCPService.update_mcp_server(
+            server_id=req.server_id,
+            update_data=update_data
+        )
         return resp_200()
     except Exception as err:
         logger.error(err)
         return resp_500()
+
+@router.get("/mcp_server/logo", summary="获得MCP服务的默认头像")
+async def get_mcp_default_logo(
+    login_user: UserPayload = Depends(get_login_user)
+):
+    return resp_200({
+        "logo_url": app_settings.default_config.get("mcp_logo_url")
+    })
+

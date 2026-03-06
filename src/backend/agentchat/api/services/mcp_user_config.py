@@ -1,27 +1,9 @@
-"""
-MCP 用户配置服务模块
-
-该模块提供 MCP 用户配置管理的核心业务逻辑，包括：
-- 用户配置的创建、查询、更新和删除
-- 配置参数管理
-- 用户个性化设置
-- 配置权限验证
-
-所有方法都是类方法，可以直接通过类名调用。
-"""
-
 from typing import Optional, List
 from agentchat.database.dao.mcp_user_config import MCPUserConfigDao
 from agentchat.database.models.user import AdminUser, SystemUser
 
 
 class MCPUserConfigService:
-    """
-    MCP 用户配置服务类
-    
-    提供 MCP 用户配置管理的核心业务逻辑，包括配置的 CRUD 操作和参数管理。
-    所有方法都是类方法，可以直接通过类名调用。
-    """
     @classmethod
     async def create_mcp_user_config(cls, mcp_server_id: str, user_id: str, config: Optional[List[dict]] = None):
         """

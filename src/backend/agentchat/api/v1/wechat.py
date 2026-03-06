@@ -1,19 +1,3 @@
-"""
-微信集成 API 端点模块
-
-该模块提供微信集成相关的 REST API 端点，包括：
-- 微信服务器验证
-- 微信消息接收和处理
-- 微信客服消息发送
-- 微信用户交互
-
-支持的功能：
-- 微信公众号集成
-- 消息自动回复
-- 用户会话管理
-- 微信特有功能支持
-"""
-
 import asyncio
 from loguru import logger
 from fastapi import APIRouter, Request, Response
@@ -62,20 +46,23 @@ WechatSystemPrompt = """
 ### 5. 回复文本格式
 - **禁止使用任何 Markdown 格式**（如 `**加粗**`、`# 标题`、`- 列表`）。
 """
+
+
 #  /wechat 路由，处理微信的 GET 和 POST
 @router.get("/wechat", response_class=PlainTextResponse)
 async def wechat_verify(
-    request: Request,
-    signature: str,
-    timestamp: str,
-    nonce: str,
-    echostr: str
+        request: Request,
+        signature: str,
+        timestamp: str,
+        nonce: str,
+        echostr: str
 ):
     wechat_conf = app_settings.wechat_config
     if WeChatService.check_signature(wechat_conf.get("token"), signature, timestamp, nonce):
         return echostr
     else:
         return "Signature verification failed"
+
 
 @router.post("/wechat")
 async def handle_wechat_message(request: Request):

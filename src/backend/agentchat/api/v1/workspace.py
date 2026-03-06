@@ -1,19 +1,3 @@
-"""
-工作台 API 端点模块
-
-该模块提供工作台相关的 REST API 端点，包括：
-- 工作台会话管理
-- 插件和工具集成
-- MCP 服务器配置
-- 工作台任务处理
-
-支持的功能：
-- 工作台会话创建和管理
-- 可用插件查询
-- MCP 服务器集成
-- 工作台任务执行
-"""
-
 import json
 from fastapi import APIRouter, Depends, HTTPException
 from langchain_core.messages import HumanMessage, SystemMessage
@@ -23,7 +7,7 @@ from agentchat.api.services.llm import LLMService
 from agentchat.api.services.mcp_server import MCPService
 from agentchat.api.services.tool import ToolService
 from agentchat.api.services.workspace_session import WorkSpaceSessionService
-from agentchat.prompts.chat import SYSTEM_PROMPT
+from agentchat.prompts.completion import SYSTEM_PROMPT
 from agentchat.schema.schemas import resp_200
 from agentchat.schema.usage_stats import UsageStatsAgentType
 from agentchat.schema.workspace import WorkSpaceSimpleTask

@@ -1,15 +1,3 @@
-"""
-微信服务模块
-
-该模块提供微信集成的核心业务逻辑，包括：
-- 微信 Access Token 管理
-- 客服消息发送
-- 媒体文件上传
-- 微信用户交互
-
-所有方法都是类方法，可以直接通过类名调用。
-"""
-
 import hashlib
 import httpx
 import asyncio
@@ -22,12 +10,6 @@ from agentchat.api.services.workspace_session import WorkSpaceSessionService
 from agentchat.settings import app_settings
 
 class WeChatService:
-    """
-    微信服务类
-    
-    提供微信集成的核心业务逻辑，包括消息发送、媒体上传和用户交互。
-    所有方法都是类方法，可以直接通过类名调用。
-    """
 
     @classmethod
     def _get_access_token(cls):

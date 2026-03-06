@@ -15,7 +15,6 @@ from agentchat.utils.extract import extract_and_combine_codeblocks
 EvalFunction = Callable[[str, dict[str, Any]], tuple[str, dict[str, Any]]]
 EvalCoroutine = Callable[[str, dict[str, Any]], Awaitable[tuple[str, dict[str, Any]]]]
 
-
 class CodeActState(MessagesState):
     """State for CodeAct agent."""
 
@@ -64,10 +63,12 @@ class CodeActAgent:
 
         self.setup_codeact_agent()
 
+
     def setup_codeact_agent(self):
         sandbox = PyodideSandbox(allow_net=True)
         eval_fn = self.create_pyodide_eval_fn(sandbox)
         self.codeact_agent = self.create_codeact_agent(self.coder_model, self.tools, eval_fn)
+
 
     async def astream(self, messages: List[BaseMessage]):
 
@@ -146,14 +147,15 @@ execute()
 
         return async_eval_fn
 
+
     def create_codeact_agent(
-            self,
-            model: BaseChatModel,
-            tools: Sequence[Union[StructuredTool, Callable]],
-            eval_fn: Union[EvalFunction, EvalCoroutine],
-            *,
-            prompt: Optional[str] = None,
-            state_schema: StateSchemaType = CodeActState,
+        self,
+        model: BaseChatModel,
+        tools: Sequence[Union[StructuredTool, Callable]],
+        eval_fn: Union[EvalFunction, EvalCoroutine],
+        *,
+        prompt: Optional[str] = None,
+        state_schema: StateSchemaType = CodeActState,
     ) -> StateGraph:
         """Create a CodeAct agent.
 

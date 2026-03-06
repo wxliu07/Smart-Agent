@@ -1,6 +1,5 @@
 from pydantic import BaseModel
 
-
 class RerankResultModel:
     def __init__(self, query, content, score, index):
         self.query = query

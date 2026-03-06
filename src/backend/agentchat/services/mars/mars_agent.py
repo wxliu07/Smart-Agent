@@ -22,7 +22,6 @@ from agentchat.services.mars.mars_tools.autobuild import construct_auto_build_pr
 class MarsConfig(BaseModel):
     user_id: str
 
-
 class MarsEnum:
     AutoBuild_Agent = 1
     Retrieval_Knowledge = 2
@@ -35,6 +34,7 @@ class MarsAgent:
     def __init__(self, mars_config: MarsConfig):
         self.mars_tools = None
         self.mars_config = mars_config
+
 
     async def init_mars_agent(self):
         self.mars_tools = await self.setup_mars_tools()
@@ -49,8 +49,7 @@ class MarsAgent:
             if name == "auto_build_agent":
                 auto_build_prompt = await construct_auto_build_prompt(self.mars_config.user_id)
                 mars_tool = copy.deepcopy(MarsTool[name])
-                mars_tool.description = mars_tool.description.replace("{{{user_configs_placeholder}}}",
-                                                                      auto_build_prompt)
+                mars_tool.description = mars_tool.description.replace("{{{user_configs_placeholder}}}", auto_build_prompt)
                 mars_tools.append(mars_tool)
             else:
                 mars_tools.append(MarsTool[name])
@@ -80,8 +79,8 @@ class MarsAgent:
 
         @after_model
         async def handler_after_model(
-                state: AgentState,
-                runtime,
+            state: AgentState,
+            runtime,
         ) -> dict[str, Any] | None:
             last_message = state["messages"][-1]
             if not last_message.tool_calls:
@@ -90,14 +89,15 @@ class MarsAgent:
 
         @wrap_tool_call
         async def handler_tool_call(
-                request: ToolCallRequest,
-                handler,
+            request: ToolCallRequest,
+            handler,
         ) -> ToolMessage | Command:
             request.tool_call["args"].update({"user_id": self.mars_config.user_id})
             tool_result = await handler(request)
-            return ToolMessage(content=tool_result, tool_call_id=request.tool_call["id"])
+            return ToolMessage(content=tool_result, name=request.tool_call["name"], tool_call_id=request.tool_call["id"])
 
         return [tool_call_limiter, handler_after_model, handler_tool_call]
+
 
     async def ainvoke_stream(self, messages: List[BaseMessage]):
         # 用于中断推理模型输出的事件
@@ -108,15 +108,14 @@ class MarsAgent:
         self.is_call_tool = False
 
         callback = UsageMetadataCallbackHandler()
-
         async def run_mars_agent():
             """
             运行Mars Agent，执行工具调用并将其输出放入队列。
             """
             async for token, chunk in self.react_agent.astream(
-                    input={"messages": messages},
-                    config={"callbacks": [callback]},
-                    stream_mode=["custom"]
+                input={"messages": messages},
+                config={"callbacks": [callback]},
+                stream_mode=["custom"]
             ):
                 self.is_call_tool = True
                 await self.mars_output_queue.put(chunk)
@@ -143,7 +142,7 @@ class MarsAgent:
                         }
 
                     if hasattr(delta, "content") and delta.content:
-                        if self.is_call_tool:  # 如果调用Mars工具的话 使用工具里面的信息进行回答
+                        if self.is_call_tool: # 如果调用Mars工具的话 使用工具里面的信息进行回答
                             break
                         else:
                             yield {
@@ -189,3 +188,5 @@ class MarsAgent:
                 input_tokens=response.usage_metadata.get("input_tokens"),
                 output_tokens=response.usage_metadata.get("output_tokens")
             )
+
+

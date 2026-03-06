@@ -1,19 +1,3 @@
-"""
-对话管理 API 端点模块
-
-该模块提供对话管理相关的 REST API 端点，包括：
-- 对话的创建、查询、更新和删除
-- 对话列表管理
-- 对话权限验证
-- 对话与代理的关联
-
-支持的功能：
-- 用户对话列表查询
-- 对话创建和配置
-- 对话删除和清理
-- 权限验证和安全控制
-"""
-
 from loguru import logger
 from fastapi import APIRouter, Depends, Body
 from agentchat.api.services.agent import AgentService
@@ -27,15 +11,20 @@ router = APIRouter(tags=["Dialog"])
 
 
 @router.get("/dialog/list", response_model=UnifiedResponseModel)
-async def get_dialog(login_user: UserPayload = Depends(get_login_user)):
+async def get_dialog(
+    login_user: UserPayload = Depends(get_login_user)
+):
     try:
         messages = await DialogService.get_list_dialog(user_id=login_user.user_id)
         results = []
-        for msg in messages:
-            msg_agent = await AgentService.select_agent_by_id(agent_id=msg["agent_id"])
 
-            msg.update(msg_agent)
-            results.append(msg)
+        for message in messages:
+            message_agent = await AgentService.select_agent_by_id(
+                agent_id=message["agent_id"]
+            )
+            message.update(message_agent)
+            results.append(message)
+
         return resp_200(data=results)
     except Exception as err:
         logger.error(err)
@@ -43,12 +32,17 @@ async def get_dialog(login_user: UserPayload = Depends(get_login_user)):
 
 
 @router.post("/dialog", response_model=UnifiedResponseModel)
-async def create_dialog(dialog_req: DialogCreateRequest = Body(),
-                        login_user: UserPayload = Depends(get_login_user)):
+async def create_dialog(
+    dialog_req: DialogCreateRequest,
+    login_user: UserPayload = Depends(get_login_user)
+):
     try:
-        dialog = await DialogService.create_dialog(name=dialog_req.name, agent_id=dialog_req.agent_id,
-                                                   agent_type=dialog_req.agent_type, user_id=login_user.user_id)
-        print(dialog)
+        dialog = await DialogService.create_dialog(
+            name=dialog_req.name,
+            agent_id=dialog_req.agent_id,
+            agent_type=dialog_req.agent_type,
+            user_id=login_user.user_id
+        )
         return resp_200(dialog)
     except Exception as err:
         logger.error(err)
@@ -56,8 +50,10 @@ async def create_dialog(dialog_req: DialogCreateRequest = Body(),
 
 
 @router.delete("/dialog", response_model=UnifiedResponseModel)
-async def delete_dialog(dialog_id: str = Body(description="对话ID", embed=True),
-                        login_user: UserPayload = Depends(get_login_user)):
+async def delete_dialog(
+    dialog_id: str = Body(description="对话ID", embed=True),
+    login_user: UserPayload = Depends(get_login_user)
+):
     try:
         # 验证用户权限
         await DialogService.verify_user_permission(dialog_id, login_user.user_id)

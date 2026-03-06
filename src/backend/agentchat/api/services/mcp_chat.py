@@ -1,19 +1,3 @@
-"""
-MCP 聊天代理模块
-
-该模块提供基于 MCP (Model Context Protocol) 的聊天代理功能，包括：
-- MCP 服务器连接和管理
-- 多模态消息处理
-- RAG 知识检索集成
-- 流式响应支持
-- 历史记录管理
-
-主要功能：
-- 集成多个 MCP 服务器
-- 支持工具调用和知识检索
-- 提供同步和异步调用接口
-"""
-
 import asyncio
 
 from agentchat.api.services.history import HistoryService
@@ -25,12 +9,6 @@ from agentchat.services.rag_handler import RagHandler
 
 
 class MCPChatAgent:
-    """
-    MCP 聊天代理类
-    
-    基于 MCP 协议的聊天代理，支持多服务器集成、工具调用和知识检索。
-    提供流式和非流式的对话响应功能。
-    """
     def __init__(self, **kwargs):
         self.mcp_servers_id = kwargs.get("mcp_servers_id")
         self.llm_id = kwargs.get("llm_id")

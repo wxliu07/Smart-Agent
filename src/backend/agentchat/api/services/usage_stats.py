@@ -1,29 +1,10 @@
-"""
-使用统计服务模块
-
-该模块提供使用统计管理的核心业务逻辑，包括：
-- 使用统计数据的创建和查询
-- Token 使用量统计
-- 代理和模型使用分析
-- 用户使用情况报告
-
-所有方法都是类方法，可以直接通过类名调用。
-"""
-
 from datetime import datetime
 from collections import defaultdict
 from typing import Dict, List, Optional, DefaultDict
 
 from agentchat.database.dao.usage_stats import UsageStatsDao, UsageStats
 
-
 class UsageStatsService:
-    """
-    使用统计服务类
-    
-    提供使用统计管理的核心业务逻辑，包括统计数据的 CRUD 操作和分析。
-    所有方法都是类方法，可以直接通过类名调用。
-    """
 
     @classmethod
     async def create_usage_stats(cls, agent, model, user_id, input_tokens=0, output_tokens=0):
@@ -61,11 +42,11 @@ class UsageStatsService:
 
     @classmethod
     async def get_usage_by_agent_model(
-            cls,
-            user_id: str,
-            agent: Optional[str] = None,
-            model: Optional[str] = None,
-            delta_days: int = 10000  # 默认值可视为所有数据
+        cls,
+        user_id: str,
+        agent: Optional[str] = None,
+        model: Optional[str] = None,
+        delta_days: int = 10000  # 默认值可视为所有数据
     ):
         results = await UsageStatsDao.get_agent_model_time_usage(
             user_id, agent, model, delta_days
@@ -148,3 +129,6 @@ class UsageStatsService:
 
         final_dict = dict(date_usage_dict)
         return final_dict
+
+
+

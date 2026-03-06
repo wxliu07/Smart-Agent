@@ -1,15 +1,3 @@
-"""
-对话服务模块
-
-该模块提供对话管理的核心业务逻辑，包括：
-- 对话的创建、查询、更新和删除
-- 对话与代理的关联管理
-- 对话时间戳更新
-- 对话权限验证
-
-所有方法都是类方法，可以直接通过类名调用。
-"""
-
 from agentchat.api.services.agent import AgentService
 from agentchat.database.dao.dialog import DialogDao
 from agentchat.database.dao.history import HistoryDao
@@ -19,12 +7,6 @@ from agentchat.database.models.user import AdminUser
 
 
 class DialogService:
-    """
-    对话服务类
-    
-    提供对话管理的核心业务逻辑，包括对话的 CRUD 操作和代理关联。
-    所有方法都是类方法，可以直接通过类名调用。
-    """
 
     @classmethod
     async def create_dialog(cls, name: str, agent_id: str, agent_type: str, user_id: str):

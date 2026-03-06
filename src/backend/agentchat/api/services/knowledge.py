@@ -1,15 +1,3 @@
-"""
-知识库服务模块
-
-该模块提供知识库管理的核心业务逻辑，包括：
-- 知识库的创建、查询、更新和删除
-- 知识库文件管理
-- 知识库权限验证
-- 知识库统计信息计算
-
-所有方法都是类方法，可以直接通过类名调用。
-"""
-
 from typing import List
 
 from agentchat.database.dao.knowledge import KnowledgeDao
@@ -19,12 +7,6 @@ from agentchat.utils.file_utils import format_file_size
 
 
 class KnowledgeService:
-    """
-    知识库服务类
-    
-    提供知识库管理的核心业务逻辑，包括知识库的 CRUD 操作和文件管理。
-    所有方法都是类方法，可以直接通过类名调用。
-    """
 
     @classmethod
     async def create_knowledge(cls, knowledge_name, knowledge_desc, user_id):
