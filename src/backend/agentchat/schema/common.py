@@ -7,6 +7,7 @@ class ModelConfig(BaseModel):
     api_key: str = ""
     base_url: str = ""
 
+
 class MultiModels(BaseModel):
     class Config:
         # 允许从dict额外属性创建模型
@@ -20,6 +21,7 @@ class MultiModels(BaseModel):
     text2image: ModelConfig = Field(default_factory=ModelConfig)
     embedding: ModelConfig = Field(default_factory=ModelConfig)
     rerank: ModelConfig = Field(default_factory=ModelConfig)
+
 
 class Tools(BaseModel):
     class Config:

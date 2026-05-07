@@ -9,8 +9,9 @@ from redis.cluster import ClusterNode
 from redis.retry import Retry
 from redis.sentinel import Sentinel
 
+
 class RedisClient:
-    
+
     def __init__(self, url, max_connections=10):
         if isinstance(url, str):
             self.pool = ConnectionPool.from_url(url, max_connections=max_connections)
@@ -110,6 +111,7 @@ class RedisClient:
 
     def close(self):
         self.connection.close()
+
 
 # 实例化对象
 redis_client = RedisClient(app_settings.redis.get('endpoint'))

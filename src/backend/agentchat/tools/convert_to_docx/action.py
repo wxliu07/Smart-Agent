@@ -21,13 +21,13 @@ def convert_to_docx(file_url: str):
     """
     return _convert_to_docx(file_url)
 
+
 def _convert_to_docx(file_url: str):
     """将用户上传的文件解析成Docx"""
     object_name = get_object_name_from_aliyun_url(file_url)
     file_name = file_url.split("/")[-1]
     file_path = get_save_tempfile(file_name)
     aliyun_oss.download_file(object_name, file_path)
-
 
     if not os.path.isfile(file_path):
         return f"上传的文件: {os.path.basename(file_path)}没有被接收到，重新上传试试呢~~~"
@@ -48,8 +48,8 @@ def _convert_to_docx(file_url: str):
             end=None,
             layout_kwargs={  # 调整布局参数
                 "detect_vertical_text": True,  # 识别垂直文本
-                "char_margin": 1.0,            # 字符间距容差
-                "line_overlap": 0.5,           # 行重叠阈值
+                "char_margin": 1.0,  # 字符间距容差
+                "line_overlap": 0.5,  # 行重叠阈值
             }
         )
         cv.close()

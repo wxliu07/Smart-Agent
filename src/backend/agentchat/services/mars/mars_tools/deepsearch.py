@@ -5,6 +5,7 @@ from langgraph.config import get_stream_writer
 from langchain_core.messages import HumanMessage
 from agentchat.services.deepsearch.stream_graph import StreamingGraph
 
+
 @tool(parse_docstring=True)
 async def deep_search(user_input: str, user_id: Optional[str] = None):
     """
@@ -41,4 +42,3 @@ async def deep_search(user_input: str, user_id: Optional[str] = None):
             event_data["data"] = f""
         if event_data.get("data"):
             writer(event_data)
-

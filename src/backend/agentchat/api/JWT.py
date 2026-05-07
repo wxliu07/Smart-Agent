@@ -1,5 +1,6 @@
 from pydantic.v1 import BaseSettings
 
+
 # 定义 Pydantic 的 BaseSettings 类
 class Settings(BaseSettings):
     authjwt_secret_key: str = 'secret'

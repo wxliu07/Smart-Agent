@@ -6,6 +6,7 @@ from email.header import Header
 
 from langchain.tools import tool
 
+
 @tool(parse_docstring=True)
 def send_email(sender: str, receiver: str, email_message: str, password: str):
     """
@@ -21,8 +22,6 @@ def send_email(sender: str, receiver: str, email_message: str, password: str):
         str: 发送邮件的结果信息。
     """
     return _send_email(sender, receiver, email_message, password)
-
-
 
 
 def _send_email(sender: str, receiver: str, email_message: str, password: str):

@@ -3,6 +3,7 @@ from langchain_community.utilities import ArxivAPIWrapper
 
 arxiv_wrapper = ArxivAPIWrapper()
 
+
 @tool(parse_docstring=True)
 def get_arxiv(query: str):
     """
@@ -15,6 +16,7 @@ def get_arxiv(query: str):
         str: 与查询相关的论文文档。
     """
     return _get_arxiv(query)
+
 
 def _get_arxiv(query: str):
     """为用户提供Arxiv上的论文"""

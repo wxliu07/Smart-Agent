@@ -14,22 +14,25 @@ from agentchat.prompts.completion import SYSTEM_PROMPT
 from agentchat.schema.completion import CompletionReq
 from agentchat.services.memory.client import memory_client
 from agentchat.utils.contexts import set_user_id_context, set_agent_name_context
-from agentchat.utils.helpers import build_completion_system_prompt, build_completion_history_messages, build_completion_user_input
+from agentchat.utils.helpers import build_completion_system_prompt, build_completion_history_messages, \
+    build_completion_user_input
 
 router = APIRouter(tags=["Completion"])
+
 
 class WatchedStreamingResponse(StreamingResponse):
     """
     重写 StreamingResponse类 保证流式输出的时候可随时暂停
     """
+
     def __init__(
-        self,
-        content,
-        callback: Callable = None,
-        status_code: int = 200,
-        headers = None,
-        media_type: str | None = None,
-        background = None,
+            self,
+            content,
+            callback: Callable = None,
+            status_code: int = 200,
+            headers=None,
+            media_type: str | None = None,
+            background=None,
     ):
         super().__init__(content, status_code, headers, media_type, background)
 
@@ -46,11 +49,12 @@ class WatchedStreamingResponse(StreamingResponse):
 
                 break
 
+
 @router.post("/completion", description="对话接口")
 async def completion(
-    *,
-    req: CompletionReq,
-    login_user: UserPayload = Depends(get_login_user)
+        *,
+        req: CompletionReq,
+        login_user: UserPayload = Depends(get_login_user)
 ):
     """
     与AI助手进行实时对话的核心接口

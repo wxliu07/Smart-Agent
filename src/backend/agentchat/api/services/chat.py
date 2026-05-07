@@ -332,6 +332,7 @@ class StreamingAgent:
         """流式调用主方法"""
         response_content = ""
         try:
+            # TODO: 这里才是聊天时调用tools, 比如天气查询
             async for token, metadata in self.react_agent.astream(
                     input={"messages": copy.deepcopy(messages), "model_call_count": 0,
                            "user_id": self.agent_config.user_id},

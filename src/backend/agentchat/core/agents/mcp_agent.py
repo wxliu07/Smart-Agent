@@ -66,8 +66,8 @@ class MCPAgent:
 
         @wrap_tool_call
         async def add_tool_call_args(
-            request: ToolCallRequest,
-            handler
+                request: ToolCallRequest,
+                handler
         ):
             await self.emit_event(
                 {
@@ -101,7 +101,6 @@ class MCPAgent:
             middleware=self.middlewares,
             system_prompt=CALL_END_PROMPT
         )
-
 
     async def ainvoke(self, messages: List[BaseMessage]) -> List[BaseMessage] | str:
         """非流式版本"""

@@ -6,7 +6,6 @@ from base64 import b64decode
 from fastapi_jwt_auth import AuthJWT
 from fastapi import Request, Depends, HTTPException
 
-
 from agentchat.services.aliyun_oss import aliyun_oss
 from agentchat.services.redis import redis_client
 from agentchat.database.dao.user_role import UserRoleDao
@@ -19,6 +18,7 @@ from agentchat.database.dao.user import UserDao
 from agentchat.utils.constants import RSA_KEY
 from agentchat.schema.schemas import CreateUserReq
 from agentchat.utils.JWT import ACCESS_TOKEN_EXPIRE_TIME
+
 
 class UserPayload:
 
@@ -38,6 +38,7 @@ class UserPayload:
                 if one == AdminRole:
                     return True
         return False
+
 
 class UserService:
 
@@ -111,6 +112,7 @@ class UserService:
         user = UserDao.get_user_by_username(user_name)
         return user.user_id
 
+
 async def get_login_user(request: Request, authorize: AuthJWT = Depends()) -> UserPayload:
     """
     获取当前登录的用户
@@ -127,6 +129,7 @@ async def get_login_user(request: Request, authorize: AuthJWT = Depends()) -> Us
     except Exception as e:
         raise HTTPException(status_code=401, detail="Invalid authentication credentials")
 
+
 def get_user_role(db_user: UserTable):
     # 查询用户的角色列表
     db_user_role = UserRoleDao.get_user_roles(db_user.user_id)
@@ -142,6 +145,7 @@ def get_user_role(db_user: UserTable):
         role = role_ids
 
     return role
+
 
 def get_user_jwt(db_user: UserTable):
     # 查询角色

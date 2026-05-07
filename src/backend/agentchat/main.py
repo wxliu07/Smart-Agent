@@ -16,6 +16,7 @@ from agentchat.settings import app_settings
 warnings.filterwarnings("ignore")
 logging.getLogger("chromadb").setLevel(logging.WARNING)
 
+
 async def register_router(app: FastAPI):
     from agentchat.api.router import router
 
@@ -45,7 +46,6 @@ def register_middleware(app: FastAPI):
     # 注册白名单中间件
     app.add_middleware(WhitelistMiddleware)
 
-
     return app
 
 
@@ -58,11 +58,13 @@ async def init_config():
     await init_default_agent()
     await update_system_mcp_server()
 
+
 def print_logo():
     from pyfiglet import Figlet
 
     f = Figlet(font="slant")
     print(f.renderText("Agent Chat"))
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):

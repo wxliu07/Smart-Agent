@@ -8,6 +8,7 @@ embedding_model = app_settings.multi_models.embedding.model_name
 embedding_client = AsyncOpenAI(base_url=app_settings.multi_models.embedding.base_url,
                                api_key=app_settings.multi_models.embedding.api_key)
 
+
 async def get_embedding(query: Union[str, List[str]]):
     # 如果是字符串或长度小于等于10的列表，直接处理
     if isinstance(query, str) or (isinstance(query, list) and len(query) <= 10):

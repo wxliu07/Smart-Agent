@@ -17,6 +17,7 @@ IMAGE_SUFFIXES = {"jpg", "jpeg", "png", "bmp", "webp", "tiff"}
 TEXT_LIKE_SUFFIXES = {"txt", "json", "html", "htm", "csv"}
 EXCEL_SUFFIXES = {"xls", "xlsx"}
 
+
 class DocParser:
 
     @classmethod
@@ -33,13 +34,13 @@ class DocParser:
             chunks = await pdf_parser.parse_into_chunks(file_id, file_path, knowledge_id)
         elif file_suffix == 'pptx':
             chunks = await pptx_parser.parse_into_chunks(file_id, file_path, knowledge_id)
-        elif file_suffix in IMAGE_SUFFIXES: # 图片类型
+        elif file_suffix in IMAGE_SUFFIXES:  # 图片类型
             new_file_path = image_to_txt(file_path)
             chunks = await text_parser.parse_into_chunks(file_id, new_file_path, knowledge_id)
-        elif file_suffix in EXCEL_SUFFIXES: # 表格类型
+        elif file_suffix in EXCEL_SUFFIXES:  # 表格类型
             new_file_path = excel_to_txt(file_path)
             chunks = await text_parser.parse_into_chunks(file_id, new_file_path, knowledge_id)
-        elif file_suffix in TEXT_LIKE_SUFFIXES: # 可转化成Txt文件类型
+        elif file_suffix in TEXT_LIKE_SUFFIXES:  # 可转化成Txt文件类型
             new_file_path = other_file_to_txt(file_path)
             chunks = await text_parser.parse_into_chunks(file_id, new_file_path, knowledge_id)
         """其他文档"""
@@ -72,5 +73,6 @@ class DocParser:
             chunk.summary = response.content
 
             return chunk
+
 
 doc_parser = DocParser()

@@ -36,6 +36,7 @@ class StreamAgentState(AgentState):
 
 MAX_TOOLS_SIZE = 10
 
+
 class AgentConfig(BaseModel):
     user_id: str
     llm_id: str
@@ -48,7 +49,6 @@ class AgentConfig(BaseModel):
     name: str = None
 
 
-
 class EmitEventAgentMiddleware(AgentMiddleware):
     def __init__(self, name_resolver_func):
         super().__init__()
@@ -56,7 +56,7 @@ class EmitEventAgentMiddleware(AgentMiddleware):
         self.name_resolver_func = name_resolver_func
 
     async def aafter_model(
-        self, state: StreamAgentState, runtime: Runtime
+            self, state: StreamAgentState, runtime: Runtime
     ) -> dict[str, Any] | None:
         last_message = state["messages"][-1]
         if last_message.tool_calls:
@@ -69,9 +69,9 @@ class EmitEventAgentMiddleware(AgentMiddleware):
         }
 
     async def awrap_model_call(
-        self,
-        request: ModelRequest,
-        handler: Callable[[ModelRequest], ModelResponse],
+            self,
+            request: ModelRequest,
+            handler: Callable[[ModelRequest], ModelResponse],
     ) -> ModelResponse:
         try:
             if available_tools := request.state.get("available_tools", []):
@@ -83,9 +83,9 @@ class EmitEventAgentMiddleware(AgentMiddleware):
             raise ValueError(err)
 
     async def awrap_tool_call(
-        self,
-        request: ToolCallRequest,
-        handler: Callable[[ToolCallRequest], ToolMessage | Command],
+            self,
+            request: ToolCallRequest,
+            handler: Callable[[ToolCallRequest], ToolMessage | Command],
     ) -> ToolMessage | Command:
         writer = get_stream_writer()
         tool_call_count = request.state.get("tool_call_count", 0)
@@ -95,7 +95,7 @@ class EmitEventAgentMiddleware(AgentMiddleware):
             "status": "START",
             "title": f"执行可用{tool_type}: {display_tool_name}",
             "message": f"正在调用插件工具 {display_tool_name}..."
-            })
+        })
         request.state["tool_call_count"] = tool_call_count + 1
         try:
             tool_result = await handler(request)
@@ -103,7 +103,7 @@ class EmitEventAgentMiddleware(AgentMiddleware):
                 "status": "END",
                 "title": f"执行可用{tool_type}: {display_tool_name}",
                 "message": tool_result.content
-                })
+            })
             return tool_result
         except Exception as err:
             writer({
@@ -112,6 +112,7 @@ class EmitEventAgentMiddleware(AgentMiddleware):
                 "message": str(err)
             })
             return ToolMessage(content=str(err), name=request.tool_call["name"], tool_call_id=request.tool_call["id"])
+
 
 class GeneralAgent:
     def __init__(self, agent_config: AgentConfig):
@@ -158,13 +159,12 @@ class GeneralAgent:
         # 仅支持传入response_format为json object的模型
         tool_selector_middleware = LLMToolSelectorMiddleware(
             model=self.tool_invocation_model,
-            max_tools=3 # 限制每次选择最多 3个工具
+            max_tools=3  # 限制每次选择最多 3个工具
         )
 
         emit_event_middleware = EmitEventAgentMiddleware(self.get_tool_display_name)
 
         return [emit_event_middleware]
-
 
     async def setup_language_model(self):
         # 普通对话模型
@@ -194,6 +194,7 @@ class GeneralAgent:
             1.工具数量较少
             2.一些工具在每次对话都能用到
         """
+
         @tool(parse_docstring=True)
         def search_available_tools(query: str, tool_call_id):
             """
@@ -216,7 +217,8 @@ class GeneralAgent:
             if not found_tools:
                 content_str = "未找到相关工具。请尝试其他关键词。"
             else:
-                content_str = f"已找到并激活以下工具:\n" + "\n".join([tool.name for tool in found_tools]) + "\n\n现在你可以调用这些工具了。"
+                content_str = f"已找到并激活以下工具:\n" + "\n".join(
+                    [tool.name for tool in found_tools]) + "\n\n现在你可以调用这些工具了。"
 
             tool_msg = ToolMessage(
                 content=content_str,
@@ -225,12 +227,13 @@ class GeneralAgent:
             )
 
             return Command(update={"available_tools": found_tools, "messages": [tool_msg]})
-        return search_available_tools
 
+        return search_available_tools
 
     async def setup_tools(self) -> List[BaseTool]:
         def create_openapi_tool_executor(tool_adapter, tool_name):
             """闭包创建一个执行OpenAPI Tool的方法"""
+
             async def _execute_wrapper(**kwargs):
                 return await tool_adapter.execute(
                     _tool_name=tool_name,
@@ -278,7 +281,6 @@ class GeneralAgent:
         agent_skills = await AgentSkillService.get_agent_skills_by_ids(self.agent_config.agent_skill_ids)
 
         def create_skill_agent_as_tool(agent_skill: AgentSkill):
-
             @tool(agent_skill.as_tool_name, description=agent_skill.description)
             async def call_skill_agent(query: str):
                 """调用技能Agent"""
@@ -298,7 +300,6 @@ class GeneralAgent:
 
         return agent_skill_as_tools
 
-
     async def setup_mcp_agent_as_tools(self):
         mcp_agent_as_tools = []
 
@@ -315,6 +316,7 @@ class GeneralAgent:
 
                 messages = await mcp_agent.ainvoke([HumanMessage(content=query)])
                 return "\n".join([message.content for message in messages])
+
             return call_mcp_agent
 
         for mcp_id in self.agent_config.mcp_ids:
@@ -356,20 +358,20 @@ class GeneralAgent:
             )
             return knowledge_message
 
-        if self.agent_config.knowledge_ids: # 当绑定知识库ID后才 As Tool
+        if self.agent_config.knowledge_ids:  # 当绑定知识库ID后才 As Tool
             self.tools.append(retrival_knowledge)
             self.tool_metadata_map[retrival_knowledge.name] = {
                 "name": "检索知识库",
                 "type": "工具"
             }
 
-
     async def astream(self, messages: List[BaseMessage]) -> AsyncGenerator[Dict[str, Any], None]:
         """流式调用主方法"""
         response_content = ""
         try:
             async for token, metadata in self.react_agent.astream(
-                    input={"messages": copy.deepcopy(messages), "model_call_count": 0, "user_id": self.agent_config.user_id},
+                    input={"messages": copy.deepcopy(messages), "model_call_count": 0,
+                           "user_id": self.agent_config.user_id},
                     config={"callbacks": [usage_metadata_callback]},
                     stream_mode=["messages", "custom"],
             ):

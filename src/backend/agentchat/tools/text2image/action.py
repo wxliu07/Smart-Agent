@@ -10,6 +10,7 @@ from langchain.tools import tool
 from agentchat.settings import app_settings
 from agentchat.services.aliyun_oss import aliyun_oss
 
+
 @tool(parse_docstring=True)
 def text_to_image(user_prompt: str):
     """

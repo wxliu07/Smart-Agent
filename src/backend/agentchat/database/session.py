@@ -9,6 +9,7 @@ from agentchat.database import engine, async_engine
 
 logger = logging.getLogger(__name__)
 
+
 @contextmanager
 def session_getter() -> Iterator[Session]:
     session = Session(engine)
@@ -21,6 +22,7 @@ def session_getter() -> Iterator[Session]:
         raise
     finally:
         session.close()
+
 
 @asynccontextmanager
 async def async_session_getter() -> AsyncIterator[AsyncSession]:

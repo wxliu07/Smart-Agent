@@ -30,7 +30,8 @@ class Reranker:
         }
 
         async with aiohttp.ClientSession() as session:
-            async with session.post(url=app_settings.multi_models.rerank.base_url, headers=headers, data=json.dumps(payload)) as response:
+            async with session.post(url=app_settings.multi_models.rerank.base_url, headers=headers,
+                                    data=json.dumps(payload)) as response:
                 if response.status == 200:
                     result = await response.json()
                     return result['output']['results']
@@ -51,11 +52,12 @@ class Reranker:
                                                      score=result['relevance_score'], index=result['index']))
         return final_documents
 
+
 if __name__ == "__main__":
     asyncio.run(initialize_app_settings("../../config.yaml"))
 
     asyncio.run(Reranker.rerank_documents(query="什么是文本排序模型", documents=[
-            "文本排序模型广泛用于搜索引擎和推荐系统中，它们根据文本相关性对候选文本进行排序",
-            "量子计算是计算科学的一个前沿领域",
-            "预训练语言模型的发展给文本排序模型带来了新的进展"
-        ]))
+        "文本排序模型广泛用于搜索引擎和推荐系统中，它们根据文本相关性对候选文本进行排序",
+        "量子计算是计算科学的一个前沿领域",
+        "预训练语言模型的发展给文本排序模型带来了新的进展"
+    ]))

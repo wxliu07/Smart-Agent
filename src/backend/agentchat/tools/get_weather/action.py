@@ -19,6 +19,7 @@ def get_weather(city: str):
     """
     return _get_weather(city)
 
+
 def _get_weather(location: str):
     """帮助用户想要查询的天气"""
     params = {
@@ -49,5 +50,3 @@ def _get_weather(location: str):
     except Exception as err:
         logger.error(f'Call Weather Tool Err: {err}')
         return str(err)
-
-
