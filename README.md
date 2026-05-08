@@ -20,12 +20,7 @@
   支持多Agent协作 • 知识库检索 • 工具调用 • MCP服务器集成 • 实时对话
 </p>
 
-<p align="center">
-  <a href="https://shy2593666979.github.io/agentchat-docs/%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8.html">🚀 快速开始</a> •
-  <a href="https://shy2593666979.github.io/agentchat-docs/%E5%BC%80%E5%8F%91%E6%8C%87%E5%8D%97/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA.html">📦 部署</a> •
-  <a href="https://shy2593666979.github.io/agentchat-docs/">📖 在线文档</a> •
-  <a href="https://agentchat.cloud">💻 在线体验</a>
-</p>
+
 
 </div>
 
@@ -174,27 +169,6 @@ AgentChat 是一个现代化的智能对话系统，基于大语言模型构建�
 
 </div>
 
-
-## 🚨 重要版本说明
-
-> **⚠️ 从 AgentChat v2.2.0 版本开始，LangChain 已升级至 1.0 版本，代码改动较大！**
-
-<div align="center">
-
-| 🔄 **版本** | 📦 **LangChain版本** | 🔧 **兼容性** | 📝 **说明** |
-|:---:|:---:|:---:|:---|
-| **v2.1.x 及以下** | 0.x | ⚠️ 旧版本 | 使用旧版LangChain API |
-| **v2.2.0+** | 1.0+ | ✅ 最新版本 | **重大更新**，API变化较大 |
-
-</div>
-
-**升级注意事项：**
-- 🔄 LangChain 1.0 引入了重大API变更
-- 📚 部分工具和Agent配置方式已更新
-- 🛠️ 建议查看[迁移指南](docs/migration.md)了解详细变更
-- 💡 新用户建议直接使用最新版本
-
----
 
 ## 💡 功能特性
 
@@ -631,40 +605,8 @@ npm run dev
 
 > 🎯 **灵活的部署选择** - 从开发测试到生产环境的完整方案
 
-### 🌐 **部署架构选择**
-
-<table>
-<tr>
-  
-<td width="33%">
 
 
----
-
-## 📖 文档
-
-### 📚 API文档
-- [AgentChat Document](docs/agentchat.md) - agentchat具体文档
-- [API Documentation v3.0](docs/api.md) - 最新API文档
-
-### 🔧 开发文档
-- **在线API文档**: 启动后端服务后访问 `/docs`
-- **前端调试指南**: [src/frontend/DEBUGGING_GUIDE.md](src/frontend/DEBUGGING_GUIDE.md)
-
-### 📋 配置指南
-
-#### 向量数据库配置
-- **Milvus**: [安装指南](https://milvus.io/docs/zh/install_standalone-windows.md)
-- **ChromaDB**: 项目中已集成，无需额外配置
-
-#### 模型服务配置
-- **Rerank模型**: [阿里云模型服务](https://help.aliyun.com/zh/model-studio/text-rerank-api)
-- **Embedding模型**: [OpenAI兼容接口](https://help.aliyun.com/zh/model-studio/embedding-interfaces-compatible-with-openai)
-
-#### 搜索引擎配置
-- **Elasticsearch**: [IK分词器](https://release.infinilabs.com/analysis-ik/stable/)
-
----
 
 ## 🔧 开发指南
 
@@ -776,111 +718,3 @@ class LoadConfig(BaseModel):
 ```python
 python scripts/fix_fastapi_jwt_auth.py # 进行脚本修复(前提是需要将依赖包安装完整)
 ```
-
-
-## 🤝 贡献指南
-
-> 💪 **共建AI未来** - 每一个贡献都让AgentChat变得更好
-
-<div align="center">
-
-### 🌟 **我们欢迎所有形式的贡献！**
-
-</div>
-
-<table>
-<tr>
-<td width="25%">
-
-#### 🐛 **Bug修复**
-*发现问题，解决问题*
-
-1. 🔍 搜索已有Issues
-2. 📝 创建详细Bug报告
-3. 🧪 提供复现步骤
-4. 💡 提交修复方案
-
-</td>
-<td width="25%">
-
-#### ✨ **功能开发**
-*新想法，新功能*
-
-1. 💭 创建Feature Request
-2. 📋 详细描述需求场景
-3. 🎨 设计实现方案
-4. 🚀 开发并测试
-
-</td>
-<td width="25%">
-
-#### 📚 **文档完善**
-*知识共享，助力他人*
-
-1. 📖 补充API文档
-2. ✍️ 编写使用教程
-3. 🌍 多语言翻译
-4. 🎥 制作视频教程
-
-</td>
-<td width="25%">
-
-#### 🧪 **社区支持**
-*帮助他人，分享经验*
-
-1. ❓ 回答社区问题
-2. 💬 参与技术讨论
-3. 🎤 分享使用心得
-4. 🤝 推广项目
-
-</td>
-</tr>
-</table>
-
-
-
-
-
-## 📄 **许可证**
-
-<div align="center">
-
-本项目采用 **[MIT License](LICENSE)** 开源许可证
-
-*这意味着你可以自由使用、修改和分发本项目 🎉*
-
-</div>
-
----
-
-<div align="center">
-
-## 🌟 **感谢支持 AgentChat！**
-
-### 如果这个项目对你有帮助，请给我们一个 ⭐️
-
-*让更多的人发现这个项目，一起构建AI的未来！*
-
-*Made with ❤ by the AgentChat Author MingGuang Tian*
-
-
-<picture>
-  <source
-    media="(prefers-color-scheme: dark)"
-    srcset="
-      https://api.star-history.com/svg?repos=Shy2593666979/AgentChat&type=Date&theme=dark
-    "
-  />
-  <source
-    media="(prefers-color-scheme: light)"
-    srcset="
-      https://api.star-history.com/svg?repos=Shy2593666979/AgentChat&type=Date
-    "
-  />
-  <img
-    alt="Star History Chart"
-    src="https://api.star-history.com/svg?repos=Shy2593666979/AgentChat&type=Date"
-  />
-</picture>
-
-</div>
