@@ -1,0 +1,109 @@
+# Copy this file to docker/config.yaml on the server, then fill in your real keys.
+# Keep docker/config.yaml private.
+
+server:
+  host: "0.0.0.0"
+  port: 7860
+  project_name: "AgentChat"
+  version: "2.3.0"
+
+mysql:
+  endpoint: "mysql+pymysql://agentchat_user:change-this-user-password@mysql:3306/agentchat"
+  async_endpoint: "mysql+aiomysql://agentchat_user:change-this-user-password@mysql:3306/agentchat"
+
+redis:
+  endpoint: "redis://redis:6379"
+
+multi_models:
+  conversation_model:
+    api_key: "填你的模型 API Key"
+    base_url: "https://dashscope.aliyuncs.com/compatible-mode/v1"
+    model_name: "qwen-plus"
+  tool_call_model:
+    api_key: "填你的模型 API Key"
+    base_url: "https://dashscope.aliyuncs.com/compatible-mode/v1"
+    model_name: "qwen-plus"
+  reasoning_model:
+    api_key: "填你的模型 API Key"
+    base_url: "https://api.deepseek.com/v1"
+    model_name: "deepseek-reasoner"
+  text2image:
+    api_key: "填你的模型 API Key"
+    base_url: "https://dashscope.aliyuncs.com/api/v1/services/aigc/text2image/image-synthesis"
+    model_name: "wanx2.0-t2i-turbo"
+  qwen_vl:
+    api_key: "填你的模型 API Key"
+    base_url: "https://dashscope.aliyuncs.com/compatible-mode/v1"
+    model_name: "qwen-vl-plus"
+  embedding:
+    api_key: "填你的模型 API Key"
+    base_url: "https://dashscope.aliyuncs.com/compatible-mode/v1"
+    model_name: "text-embedding-v4"
+  rerank:
+    api_key: "填你的模型 API Key"
+    base_url: "https://dashscope.aliyuncs.com/compatible-mode/v1"
+    model_name: "gte-rerank-v2"
+
+tools:
+  weather:
+    api_key: "填高德 API Key，可先留空"
+    endpoint: "https://restapi.amap.com/v3/weather/weatherInfo?parameters"
+  tavily:
+    api_key: "填 Tavily API Key，可先留空"
+  google:
+    api_key: "填 SerpApi API Key，可先留空"
+  delivery:
+    api_key: ""
+    endpoint: "https://qyexpress.market.alicloudapi.com/composite/queryexpress"
+  bocha:
+    api_key: "填 BoCha API Key，可先留空"
+    endpoint: "https://api.bochaai.com/v1/web-search"
+
+rag:
+  enable_summary: true
+  enable_elasticsearch: true
+  retrival:
+    top_k: 5
+    min_score: 0.2
+  split:
+    chunk_size: 500
+    overlap_size: 100
+  elasticsearch:
+    hosts: "http://elasticsearch:9200"
+  vector_db:
+    host: "127.0.0.1"
+    port: "19530"
+    mode: "chroma"
+
+aliyun_oss:
+  access_key_id: "填 OSS AccessKeyId"
+  access_key_secret: "填 OSS AccessKeySecret"
+  endpoint: "oss-cn-beijing.aliyuncs.com"
+  bucket_name: "填 OSS bucket"
+  base_url: "https://你的 bucket 域名"
+
+default_config:
+  mcp_logo_url: "https://agentchat.oss-cn-beijing.aliyuncs.com/icons/mcp/mcp.png"
+  tool_logo_url: "https://agentchat.oss-cn-beijing.aliyuncs.com/icons/tools/default.png"
+  agent_logo_url: "https://agentchat.oss-cn-beijing.aliyuncs.com/icons/tools/bot.png"
+  mars_daily_url: "https://news.aibase.com/zh/news"
+  memory_collection_name: "memory"
+
+wechat_config:
+  token: ""
+  app_id: ""
+  secret: ""
+
+langfuse:
+  trace_name: "agentchat"
+  host: "https://cloud.langfuse.com"
+  public_key: ""
+  secret_key: ""
+  user_id: ""
+
+whitelist_paths:
+  - "/health"
+  - "/docs"
+  - "/openapi.json"
+  - "/api/v1/user/login"
+  - "/api/v1/user/register"

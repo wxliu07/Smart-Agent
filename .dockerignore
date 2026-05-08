@@ -6,5 +6,4 @@ src/frontend/.yarn/
 src/frontend/package-lock.json
 src/frontend/pnpm-lock.yaml
 src/frontend/yarn.lock
-src/frontend/dist/
 src/frontend/.env*

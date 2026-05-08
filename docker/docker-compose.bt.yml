@@ -1,0 +1,129 @@
+services:
+  mysql:
+    container_name: agentchat-mysql
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: AgentChatRoot2026_9a7X
+      MYSQL_DATABASE: agentchat
+      MYSQL_USER: agentchat_user
+      MYSQL_PASSWORD: AgentChatUser2026_9a7X
+      TZ: Asia/Shanghai
+    command: >
+      --default-authentication-plugin=mysql_native_password
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+      --innodb-buffer-pool-size=256M
+      --max-connections=200
+    volumes:
+      - agentchat_mysql_data:/var/lib/mysql
+    networks:
+      - agentchat-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+
+  redis:
+    image: redis:7.0-alpine
+    container_name: agentchat-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    environment:
+      TZ: Asia/Shanghai
+    volumes:
+      - agentchat_redis_data:/data
+    networks:
+      - agentchat-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.15.3
+    container_name: agentchat-elasticsearch
+    restart: unless-stopped
+    environment:
+      discovery.type: single-node
+      xpack.security.enabled: "false"
+      xpack.security.http.ssl.enabled: "false"
+      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+      TZ: Asia/Shanghai
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    volumes:
+      - agentchat_es_data:/usr/share/elasticsearch/data
+    networks:
+      - agentchat-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fs http://localhost:9200/_cluster/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 20
+      start_period: 90s
+
+  backend:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: agentchat-backend
+    restart: unless-stopped
+    command: ["uvicorn", "agentchat.main:app", "--host", "0.0.0.0", "--port", "7860", "--proxy-headers"]
+    environment:
+      TZ: Asia/Shanghai
+      PYTHONUNBUFFERED: "1"
+    volumes:
+      - ./config.yaml:/app/agentchat/config.yaml:ro
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+    networks:
+      - agentchat-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7860/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  frontend:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.frontend.prebuilt
+    container_name: agentchat-frontend
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:18090:8090"
+    environment:
+      TZ: Asia/Shanghai
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - agentchat-network
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "-", "http://localhost:8090/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  agentchat-network:
+    driver: bridge
+
+volumes:
+  agentchat_mysql_data:
+  agentchat_redis_data:
+  agentchat_es_data:

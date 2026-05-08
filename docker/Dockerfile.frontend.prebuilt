@@ -1,0 +1,11 @@
+# Serve a frontend bundle that was already built on your local machine.
+# This avoids running npm install / npm run build on a small production server.
+FROM nginx:alpine
+
+COPY docker/nginx.conf /etc/nginx/nginx.conf
+COPY src/frontend/dist/ /usr/share/nginx/html/
+COPY src/frontend/src/assets/ /usr/share/nginx/html/src/assets/
+
+EXPOSE 8090
+
+CMD ["nginx", "-g", "daemon off;"]
