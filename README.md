@@ -1,720 +1,193 @@
-
-<div align='center'>
-    <img src="https://github.com/user-attachments/assets/eb9b3b09-e2bf-4c9d-95a0-5c2d9712723d" alt="alt text" width="70%">
-</div>
-
-<div align="center">
-
-<p align="center">
-  <img src="https://img.shields.io/badge/python-3.12+-blue.svg?style=for-the-badge&logo=python&logoColor=white" alt="Python Version" />
-  <img src="https://img.shields.io/badge/vue-3.4+-4FC08D.svg?style=for-the-badge&logo=vue.js&logoColor=white" alt="Vue Version" />
-  <img src="https://img.shields.io/badge/fastapi-0.115+-009688.svg?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI" />
-  <img src="https://img.shields.io/badge/license-MIT-green.svg?style=for-the-badge" alt="License" />
-</p>
-
-<p align="center">
-  <b>🌟 一个基于大语言模型的现代化智能对话系统 🌟</b>
-</p>
-
-<p align="center">
-  支持多Agent协作 • 知识库检索 • 工具调用 • MCP服务器集成 • 实时对话
-</p>
-
-
-
-</div>
-
----
-
-## 📋 目录
-
-- [🎯 项目简介](#-项目简介)
-- [✨ 功能展示](#-功能展示)
-- [🚨 重要版本说明](#-重要版本说明)
-- [💡 功能特性](#-功能特性)
-- [🛠 技术栈](#-技术栈)
-- [📁 项目结构](#-项目结构)
-- [🚀 快速开始](#-快速开始)
-- [📦 部署](#-高级部署指南)
-- [📖 文档](#-文档)
-- [📄 许可证](#-许可证)
-
----
-
-## 🎯 项目简介
-
-AgentChat 是一个现代化的智能对话系统，基于大语言模型构建，提供了丰富的AI对话功能。系统采用前后端分离架构，支持多种AI模型、知识库检索、工具调用、MCP服务器集成等高级功能。
-
-### 🌟 核心亮点
-
-- 🤖 **多模型支持**: 集成OpenAI、DeepSeek、Qwen等主流大语言模型
-- 🧠 **智能Agent**: 支持多Agent协作，具备推理和决策能力
-- 📚 **知识库检索**: RAG技术实现精准知识检索和问答
-- 🔧 **工具生态**: 内置多种实用工具，支持自定义扩展
-- 🌐 **MCP集成**: 支持Model Context Protocol服务器
-- 💬 **实时对话**: 流式响应，提供流畅的对话体验
-- 🎨 **现代界面**: 基于Vue 3和Element Plus的美观UI
-
----
-
-## ✨ 功能展示
-
-> 🎨 **界面预览** - 体验现代化的智能对话系统
-
-<div align="center">
-
-### 🖥️新增工作区
-*新增工作区，工作区和应用中心可随意切换*
-<img width="800" height="450" alt="c453afd6-84ed-4bb7-b268-407fb531a1c9" src="https://github.com/user-attachments/assets/766c7628-2256-4c8b-a838-c400eaa78d6b" />
-
-
-### ✨灵寻任务规划
-*实时的任务流程图，更加直观的感受*
-<img width="800" height="450" alt="cc59faad-4112-48cd-b9b1-6f89d3cbdb39" src="https://github.com/user-attachments/assets/53f7fe9f-d70d-4cc2-bf7e-b47a712a6d7a" />
-
-### 📊数据看板
-*能够根据Agent、模型、时间范围进行筛选调用次数和Token使用量* 
-<img width="800" height="450" alt="73f74567-7a97-4cd8-ab05-34759efa25cc" src="https://github.com/user-attachments/assets/b0cb4ccf-b868-4f1b-9b26-8a882d8130da" />
-
-
-### 🏠 智言平台首页
-*简洁现代的主界面，提供直观的功能导航*
-<img width="800" height="450" alt="d0aaf6bb-d1db-487b-b78b-2a5c6ef565d2" src="https://github.com/user-attachments/assets/dc626494-4797-4a86-b350-3a0759d52d64" />
-
-
-
-### 🔐 智言平台登录页
-*安全便捷的用户认证系统*
-
-<img width="800" height="450" alt="d67ba546-b3bd-40e0-b09c-9b1615afda29" src="https://github.com/user-attachments/assets/87b6e15c-a4aa-47c5-b588-0bc977599311" />
-
-
-### 🤖 智能体管理页面
-*强大的Agent配置和管理中心*
-
-<img width="800" height="450" alt="66830e14-e225-48e6-9d3c-7736cea7b336" src="https://github.com/user-attachments/assets/b24d47ee-17ea-4cc3-bfd2-53cf93c87ebb" />
-
-</div>
-
-### 🌟 智能Agent功能演示
-
-<table>
-<tr>
-<td width="50%">
-
-#### 🌤️ 天气查询Agent
-*实时天气信息查询和预报*
-
-<img width="400" height="240" alt="天气查询Agent" src="https://github.com/user-attachments/assets/91a95c2b-f194-4c25-ba0f-f8cb393cba50" />
-
-</td>
-<td width="50%">
-
-#### 🎨 文生图Agent
-*AI驱动的图像生成服务*
-
-<img width="400" height="240" alt="文生图Agent" src="https://github.com/user-attachments/assets/58194798-5c3e-4d7d-895c-944b6665e5a6" />
-
-
-</td>
-</tr>
-</table>
-
-<div align="center">
-
-<div align="center">
-
-### 🔁智能体工具多轮调用
-
-平台中智能体支持工具多轮调用（指的是根据工具C依赖工具B结果，执行工具B依赖工具A结果，所以调用工具的顺序是 A --> B --> C）
-<img width="800" height="450" alt="dc426a1b220af20a06b068a4ffc2bb10" src="https://github.com/user-attachments/assets/029c70ce-e5fa-4f2c-926a-a5dfd719e237" />
-
-<div align="center">
-
-### 🔌 MCP服务器集成
-*支持Model Context Protocol，可上传自定义MCP服务*
-
-<img width="800" height="450" alt="7a88f691-a1e5-4568-91c0-c74488914d5c" src="https://github.com/user-attachments/assets/79bfa401-bd94-4290-b7ae-bcb69cc00f64" />
-
-
-### 📚 知识库管理系统
-*智能知识管理，为Agent提供丰富的外部知识支持*
-
-<img width="800" height="450" alt="99c68f9f-d787-4434-b609-000f578e5977" src="https://github.com/user-attachments/assets/0de41202-295a-43c5-a15c-c0b3cc55e5f8" />
-
-
-### 📄 文档解析引擎
-*支持PDF、Markdown、Docx、Txt等多种格式的智能解析*
-
-<img width="800" height="450" alt="5c7d4514-3e73-4dee-a25e-640e2b345bc6" src="https://github.com/user-attachments/assets/c5eba600-7dc2-429a-88f9-50f8811f293b" />
-
-
-### 🛠️ 工具管理中心
-*丰富的内置工具集，支持用户自定义上传工具*
-
-<img width="800" height="450" alt="7c50278e-3152-4fa0-99c6-46462cb66b7e" src="https://github.com/user-attachments/assets/6a0126d2-5042-4131-816e-5d049d09728c" />
-
-
-### 🧠 AI模型管理
-*多模型支持，灵活配置不同AI服务*
-
-<img width="800" height="450" alt="32c29244-175c-4b20-8485-63f87a35216e" src="https://github.com/user-attachments/assets/97053c0d-a57c-4347-9cf1-1ab96fa7fc22" />
-
-
-### 📰 生成AI日报
-*获取最新的AI咨询，支持生成图片类型的日报*
-
-<img width="500" height="1500" alt="image" src="https://github.com/user-attachments/assets/a4f4489a-19bf-4516-96db-77ff2525beb8" />
-
-
-</div>
-
-
-## 💡 功能特性
-
-> ⭐ **全方位的AI智能服务** - 从对话到工具，从知识到决策
-
-<div align="center">
-
-### 🎯 核心功能模块
-
-</div>
-
-<table>
-<tr>
-<td width="50%">
-
-#### 🤖 **AI对话引擎**
-> *智能、自然、高效的对话体验*
-
-- ✨ **多模型生态**: 支持OpenAI、Anthropic、通义千问等主流LLM
-- 🌊 **流式响应**: 实时显示生成内容，无需等待
-- 🧠 **上下文记忆**: 支持长对话，智能理解对话历史
-- 🔍 **思考可视化**: 深度思考面板，展示AI推理过程
-- 📝 **对话管理**: 完整的对话历史存储和检索
-- 🎛️ **参数调优**: 温度、Top-p等参数精细控制
-
-</td>
-<td width="50%">
-
-#### 🧠 **智能Agent系统**
-> *多智能体协作，自动化任务执行*
-
-- 🤝 **多Agent协作**: 智能体间任务分工与协调
-- 🔧 **任务自动化**: 智能分解复杂任务，自动执行
-- ⚙️ **能力配置**: 灵活的Agent能力定义和管理
-- 🔄 **工作流编排**: 可视化工作流设计和执行
-- 📊 **执行监控**: 实时监控Agent执行状态
-- 🎯 **目标导向**: 基于目标的智能决策和行动
-
-</td>
-</tr>
-</table>
-
-<table>
-<tr>
-<td width="50%">
-
-#### 📚 **知识库系统**
-> *企业级知识管理，RAG技术加持*
-
-- 📎 **多格式支持**: PDF、Word、Excel、Markdown、TXT等
-- 🧩 **智能分块**: 语义级别的文档分割和处理
-- 🔍 **向量检索**: 基于语义的精准知识检索
-- 💡 **RAG问答**: 检索增强生成，提高回答准确性
-- 🗂️ **知识组织**: 分类管理，标签系统
-- 📈 **使用统计**: 知识库使用情况分析
-
-</td>
-<td width="50%">
-
-#### 🛠️ **丰富工具生态**
-> *10+内置工具，无限扩展可能*
-
-- 📧 **通信工具**: 邮件发送、消息推送
-- 🔍 **信息检索**: Google搜索、学术论文搜索
-- 🌤️ **生活服务**: 天气查询、快递追踪
-- 📄 **文档处理**: 格式转换、内容提取
-- 🎨 **多媒体**: 文生图、图像识别、OCR
-- 📊 **数据分析**: Excel处理、数据可视化
-- 🤖 **自动化**: 简历优化、内容重写
-- 🕷️ **网络工具**: 网页爬取、内容抓取
-
-</td>
-</tr>
-</table>
-
-<div align="center">
-
-### 🔧 **高级特性**
-
-</div>
-
-<table>
-<tr>
-<td width="33%">
-
-#### 🌐 **MCP服务器**
-*Model Context Protocol集成*
-
-- 🔌 **协议支持**: 完整MCP协议实现
-- 🏗️ **自定义服务**: 支持用户自定义MCP服务器
-- 📦 **内置服务**: 天气、ArXiv等预构建服务
-- 🔄 **动态加载**: 运行时动态加载MCP服务
-- ⚡ **高性能**: 异步处理，快速响应
-
-</td>
-<td width="33%">
-
-#### 👤 **用户管理**
-*安全的身份认证与权限控制*
-
-- 🔐 **安全认证**: JWT令牌，安全可靠
-- 👥 **用户系统**: 注册、登录、个人资料
-- 🛡️ **权限控制**: 细粒度权限管理
-- ⚙️ **个性配置**: 个人偏好设置
-- 📊 **使用统计**: 用户行为分析
-
-</td>
-<td width="33%">
-
-#### 🏗️ **系统架构**
-*现代化的技术架构*
-
-- 🔄 **前后端分离**: Vue3 + FastAPI
-- 📡 **实时通信**: WebSocket支持
-- 💾 **多数据库**: MySQL、Redis、ChromaDB
-- 🐳 **容器化**: Docker部署，易于扩展
-- 📈 **可监控**: 完整的日志和监控体系
-
-</td>
-</tr>
-</table>
-
-### 🎨 **技术亮点**
-
-<div align="center">
-
-| 🌟 **特性** | 📝 **描述** | 🔧 **技术** |
-|:---:|:---|:---|
-| **流式响应** | 实时生成内容，提升用户体验 | Server-Sent Events |
-| **向量检索** | 语义级别的知识检索 | ChromaDB + Embedding |
-| **异步处理** | 高并发任务处理 | FastAPI + AsyncIO |
-| **模块化设计** | 松耦合架构，易于扩展 | 微服务架构 |
-| **智能缓存** | Redis缓存，提升响应速度 | Redis + 智能缓存策略 |
-
-</div>
-
----
-
-## 🛠 技术栈
-
-### 后端技术
-- **框架**: FastAPI (Python 3.12+)
-- **AI集成**: LangChain, OpenAI, Anthropic
-- **数据库**: MySQL 8.0, Redis 7.0
-- **向量数据库**: ChromaDB, Milvus
-- **搜索引擎**: Elasticsearch
-- **文档处理**: PyMuPDF, Unstructured
-- **异步任务**: Celery
-- **部署**: Docker, Gunicorn, Uvicorn
-
-### 前端技术
-- **框架**: Vue 3.4+ (Composition API)
-- **UI组件**: Element Plus
-- **状态管理**: Pinia
-- **路由**: Vue Router 4
-- **构建工具**: Vite 5
-- **开发语言**: TypeScript
-- **样式**: SCSS
-- **Markdown**: md-editor-v3
-
-### 开发工具
-- **包管理**: Poetry (后端), npm (前端)
-- **代码格式**: Black, Prettier
-- **类型检查**: mypy, TypeScript
-- **容器化**: Docker, Docker Compose
-
----
-
-## 📁 项目结构
-
-> 🏗️ **完整的项目架构** - 模块化设计，清晰的职责分离
-
-<details>
-<summary><b>🔍 点击展开完整项目结构</b></summary>
-
-```
-AgentChat/                          # 🏠 项目根目录
-├── 📄 README.md                   # 📖 项目说明文档
-├── 📄 LICENSE                     # ⚖️ 开源许可证
-├── 📄 .gitignore                  # 🚫 Git忽略文件配置
-├── 📄 pyproject.toml              # 🐍 Python项目配置
-├── 📄 requirements.txt            # 📦 Python依赖包列表
-│
-├── 📁 .vscode/                    # 🔧 VSCode编辑器配置
-├── 📁 .idea/                      # 💡 JetBrains IDE配置
-│
-├── 📁 docs/                       # 📚 项目文档目录
-│   ├── 📄 API_Documentation_v3.0.md  # 🔄 最新API文档
-│   ├── 📄 API_Documentation_v2.0.md  # 📋 v2.0 API文档
-│   └── 📄 API_Documentation_v1.0.md  # 📝 v1.0 API文档
-│
-├── 📁 docker/                     # 🐳 容器化配置
-│   ├── 📄 Dockerfile              # 🐳 Docker镜像构建文件
-│   └── 📄 docker-compose.yml      # 🔧 Docker编排配置
-│
-└── 📁 src/                        # 💻 源代码目录
-    ├── 📁 backend/                # 🔧 后端服务
-    │   ├── 📁 chroma_db/          # 🗄️ ChromaDB向量数据库
-    │   └── 📁 agentchat/          # 🤖 核心后端应用
-    │       ├── 📄 __init__.py     # 🐍 Python包初始化文件
-    │       ├── 📄 main.py         # 🚀 FastAPI应用入口
-    │       ├── 📄 settings.py     # ⚙️ 应用配置设置
-    │       ├── 📄 config.yaml     # 📋 YAML配置文件
-    │       │
-    │       ├── 📁 api/            # 🌐 API路由层
-    │       │   ├── 📄 __init__.py
-    │       │   ├── 📄 router.py   # 🔀 主路由配置
-    │       │   ├── 📄 JWT.py      # 🔐 JWT认证处理
-    │       │   ├── 📁 v1/         # 📊 v1版本API接口
-    │       │   ├── 📁 services/   # 🔧 服务层API
-    │       │   └── 📁 errcode/    # ❌ 错误码定义
-    │       │
-    │       ├── 📁 core/           # 🏗️ 核心功能模块
-    │       │   ├── 📄 __init__.py
-    │       │   └── 📁 models/     # 🧠 AI模型管理
-    │       │
-    │       ├── 📁 database/       # 🗃️ 数据库层
-    │       │   ├── 📄 __init__.py # 🔗 数据库连接配置
-    │       │   ├── 📄 init_data.py # 🏗️ 数据库初始化脚本
-    │       │   ├── 📁 models/     # 📊 数据模型定义
-    │       │   └── 📁 dao/        # 💾 数据访问对象
-    │       │
-    │       ├── 📁 services/       # 🎯 业务服务层
-    │       │   ├── 📄 __init__.py
-    │       │   ├── 📄 retrieval.py      # 🔍 信息检索服务
-    │       │   ├── 📄 rag_handler.py    # 📚 RAG处理服务
-    │       │   ├── 📄 aliyun_oss.py     # ☁️ 阿里云OSS服务
-    │       │   ├── 📄 redis.py          # 💾 Redis缓存服务
-    │       │   ├── 📁 rag/              # 📖 RAG检索增强生成
-    │       │   ├── 📁 mars/             # 🚀 Mars智能体服务
-    │       │   ├── 📁 mcp/              # 🔌 MCP协议服务
-    │       │   ├── 📁 mcp_agent/        # 🤖 MCP Agent服务
-    │       │   ├── 📁 mcp_openai/       # 🧠 MCP OpenAI集成
-    │       │   ├── 📁 deepsearch/       # 🕵️ 深度搜索服务
-    │       │   ├── 📁 transform_paper/  # 📄 论文转换服务
-    │       │   ├── 📁 autobuild/        # 🏗️ 自动构建服务
-    │       │   └── 📁 rewrite/          # ✏️ 内容重写服务
-    │       │
-    │       ├── 📁 tools/          # 🛠️ 工具集成
-    │       │   ├── 📄 __init__.py # 🧰 工具注册和管理
-    │       │   ├── 📁 arxiv/      # 📚 ArXiv论文工具
-    │       │   ├── 📁 delivery/   # 📦 快递查询工具
-    │       │   ├── 📁 web_search/ # 🔍 网络搜索工具
-    │       │   ├── 📁 get_weather/     # 🌤️ 天气查询工具
-    │       │   ├── 📁 send_email/      # 📧 邮件发送工具
-    │       │   ├── 📁 text2image/      # 🎨 文本转图片工具
-    │       │   ├── 📁 image2text/      # 👁️ 图片转文本工具
-    │       │   ├── 📁 convert_to_pdf/  # 📄 PDF转换工具
-    │       │   ├── 📁 convert_to_docx/ # 📝 Word转换工具
-    │       │   ├── 📁 resume_optimizer/# 📋 简历优化工具
-    │       │   ├── 📁 rag_data/        # 📊 RAG数据处理工具
-    │       │   └── 📁 crawl_web/       # 🕷️ 网页爬虫工具
-    │       │
-    │       ├── 📁 mcp_servers/    # 🖥️ MCP服务器集合
-    │       ├── 📁 prompts/        # 💬 提示词模板库
-    │       ├── 📁 config/         # ⚙️ 配置文件目录
-    │       ├── 📁 schema/         # 📋 数据模式定义
-    │       ├── 📁 data/           # 💾 数据存储目录
-    │       ├── 📁 utils/          # 🧰 通用工具函数
-    │       └── 📁 test/           # 🧪 测试代码目录
-    │
-    └── 📁 frontend/               # 🎨 前端应用
-        ├── 📄 package.json       # 📦 Node.js项目配置
-        ├── 📄 package-lock.json  # 🔒 依赖版本锁定
-        ├── 📄 tsconfig.json      # 🔧 TypeScript配置
-        ├── 📄 tsconfig.app.json  # 📱 应用TypeScript配置
-        ├── 📄 tsconfig.node.json # 🔧 Node环境TypeScript配置
-        ├── 📄 vite.config.ts     # ⚡ Vite构建配置
-        ├── 📄 index.html         # 🌐 HTML入口文件
-        ├── 📄 .gitignore         # 🚫 前端Git忽略配置
-        ├── 📄 README.md          # 📖 前端说明文档
-        ├── 📄 DEBUGGING_GUIDE.md # 🐛 调试指南
-        ├── 📄 auto-imports.d.ts  # 🔄 自动导入类型声明
-        ├── 📄 components.d.ts    # 🧩 组件类型声明
-        │
-        ├── 📁 public/            # 🌍 静态资源目录
-        │
-        └── 📁 src/               # 💻 前端源代码
-            ├── 📄 main.ts        # 🚀 Vue应用入口
-            ├── 📄 App.vue        # 🏠 根组件
-            ├── 📄 style.css      # 🎨 全局样式
-            ├── 📄 type.ts        # 📋 TypeScript类型定义
-            ├── 📄 vite-env.d.ts  # 🔧 Vite环境类型声明
-            │
-            ├── 📁 components/    # 🧩 可复用组件库
-            │   ├── 📁 agentCard/      # 🤖 Agent卡片组件
-            │   ├── 📁 commonCard/     # 🃏 通用卡片组件
-            │   ├── 📁 dialog/         # 💬 对话框组件
-            │   ├── 📁 drawer/         # 📜 抽屉组件
-            │   └── 📁 historyCard/    # 📜 历史记录卡片
-            │
-            ├── 📁 pages/         # 📄 页面组件
-            │   ├── 📄 index.vue       # 🏠 首页
-            │   ├── 📁 agent/          # 🤖 Agent管理页面
-            │   ├── 📁 configuration/ # ⚙️ 配置页面
-            │   ├── 📁 construct/      # 🏗️ 构建页面
-            │   ├── 📁 conversation/   # 💬 对话页面
-            │   ├── 📁 homepage/       # 🏠 主页模块
-            │   ├── 📁 knowledge/      # 📚 知识库页面
-            │   ├── 📁 login/          # 🔐 登录页面
-            │   ├── 📁 mars/           # 🚀 Mars对话页面
-            │   ├── 📁 mcp-server/     # 🖥️ MCP服务器页面
-            │   ├── 📁 model/          # 🧠 模型管理页面
-            │   ├── 📁 notFound/       # ❓ 404页面
-            │   ├── 📁 profile/        # 👤 用户资料页面
-            │   └── 📁 tool/           # 🛠️ 工具管理页面
-            │
-            ├── 📁 router/        # 🛣️ 路由配置
-            ├── 📁 store/         # 🗄️ 状态管理(Pinia)
-            ├── 📁 apis/          # 🌐 API接口定义
-            ├── 📁 utils/         # 🧰 工具函数库
-            └── 📁 assets/        # 🖼️ 静态资源(图片、字体等)
+# AgentChat
+
+AgentChat 是一个前后端分离的智能体对话平台。后端基于 FastAPI、LangChain、LangGraph、MCP 与 RAG 能力构建，前端基于 Vue 3、Vite、TypeScript 与 Element Plus 构建，支持多模型对话、工具调用、知识库检索、多智能体工作流、MCP 服务接入和使用量统计。
+
+## 功能概览
+
+- 多模型接入：支持对话模型、工具调用模型、推理模型、Embedding、Rerank、视觉模型与文生图模型的独立配置。
+- 智能体与工具：内置天气、搜索、论文检索、网页抓取、文件转换、图片理解、邮件发送、快递查询等工具，并支持自定义工具扩展。
+- RAG 知识库：支持多格式文档解析、分块、向量检索、Elasticsearch 关键词检索与召回增强问答。
+- MCP 集成：支持标准 MCP 服务和项目内置 MCP Server，便于把外部工具接入智能体运行时。
+- 用户与数据：包含用户认证、对话历史、Agent 配置、模型配置、工具配置、知识库和调用统计等模块。
+- 前端工作台：提供对话、知识库、Agent 管理、模型管理、工具管理、MCP Server、工作区和数据看板等页面。
+
+## 技术栈
+
+后端：Python 3.12+、FastAPI、Uvicorn、LangChain、LangGraph、SQLModel、MySQL、Redis、Elasticsearch、Milvus/ChromaDB、MCP。
+
+前端：Vue 3、Vite、TypeScript、Element Plus、Pinia、Vue Router、Axios、ECharts。
+
+## 项目结构
+
+```text
+AgentChat/
+├─ docker/                         # Docker、Compose、Nginx 和生产配置模板
+├─ docs/                           # 与项目代码、接口、数据库、架构相关的文档
+├─ scripts/                        # 本地启动和维护脚本
+├─ src/
+│  ├─ backend/
+│  │  ├─ agentchat/
+│  │  │  ├─ api/                   # FastAPI 路由与接口服务
+│  │  │  ├─ config/                # 工具和 MCP 默认配置
+│  │  │  ├─ core/                  # 模型、Agent、回调等核心能力
+│  │  │  ├─ database/              # SQLModel 模型、DAO、初始化逻辑
+│  │  │  ├─ mcp_servers/           # 内置 MCP Server
+│  │  │  ├─ prompts/               # Prompt 模板
+│  │  │  ├─ schema/                # 请求/响应数据结构
+│  │  │  ├─ services/              # RAG、MCP、记忆、搜索、工作区等服务
+│  │  │  ├─ tools/                 # 内置工具实现
+│  │  │  ├─ main.py                # FastAPI 应用入口
+│  │  │  └─ settings.py            # YAML 配置加载
+│  │  └─ fastapi_jwt_auth/         # 项目内兼容版本 JWT 认证模块
+│  └─ frontend/
+│     ├─ src/
+│     │  ├─ apis/                  # 前端 API 封装
+│     │  ├─ components/            # 通用组件
+│     │  ├─ pages/                 # 业务页面
+│     │  ├─ router/                # 路由
+│     │  ├─ store/                 # Pinia 状态
+│     │  └─ utils/                 # 工具函数
+├─ pyproject.toml
+├─ requirements.txt
+└─ README.md
 ```
 
-</details>
+## 敏感配置
 
-### 📊 项目统计
+不要把真实 API Key、数据库密码、JWT 密钥、OSS AccessKey、Webhook Token 或任何个人配置提交到 GitHub。
 
-<div align="center">
+本项目默认从 `src/backend/agentchat/config.yaml` 读取本地配置。该文件已被 `.gitignore` 忽略，应该只保留在本机或服务器上。首次运行时可以复制模板：
 
-| 📂 **类别** | 📈 **数量** | 📝 **说明** |
-|:---:|:---:|:---|
-| **后端模块** | 15+ | API、服务、工具、数据库等核心模块 |
-| **前端页面** | 12+ | 完整的用户界面和交互页面 |
-| **内置工具** | 10+ | 涵盖搜索、文档、图像、通信等功能 |
-| **AI模型** | 5+ | 支持主流大语言模型和嵌入模型 |
-| **MCP服务** | 多个 | 可扩展的MCP协议服务器 |
-
-</div>
-
-
----
-
-## 🚀 快速开始
-
-> 🎯 **三种部署方式任你选择** - Docker一键部署 | 本地开发 | 生产环境
-
-<div align="center">
-
-### 📋 系统要求
-
-| 🛠️ **组件** | 🔢 **版本要求** | 📝 **说明** |
-|:---:|:---:|:---|
-| **Python** | 3.12+ | 后端运行环境 |
-| **Node.js** | 18+ | 前端构建环境 |
-| **MySQL** | 8.0+ | 主数据库 |
-| **Redis** | 7.0+ | 缓存和会话存储 |
-| **Docker** | 20.10+ | 容器化部署（推荐） |
-
-</div>
-
-### 🎉 **方式一：Docker一键部署（推荐）**
-
-<details>
-<summary><b>💫 点击展开Docker部署步骤</b></summary>
-
-#### 🔥 **超简单三步部署**
-
-```bash
-# 1️⃣ 克隆项目
-git clone https://github.com/Shy2593666979/AgentChat.git
-cd AgentChat
-
-# 2️⃣ 配置API密钥
-cp src/backend/agentchat/config.yaml.example src/backend/agentchat/config.yaml
-# 编辑配置文件，填入你的API密钥
-
-# 3️⃣ 一键启动
-cd docker
-docker-compose up --build -d
+```powershell
+Copy-Item src/backend/agentchat/config.example.yaml src/backend/agentchat/config.yaml
 ```
 
-#### ✅ **验证部署**
-```bash
-# 查看服务状态
-docker-compose ps
+然后只在 `config.yaml` 中填写真实值。Docker 部署时使用：
 
-# 查看日志
-docker-compose logs -f app
+```powershell
+Copy-Item docker/config.production.example.yaml docker/config.yaml
+Copy-Item docker/docker.env.example docker/docker.env
 ```
 
-🎊 **完成！** 访问 [http://localhost:8090](http://localhost:8090) 开始使用！
+同样只在 `docker/config.yaml` 和 `docker/docker.env` 中填写真实密钥。
 
-</details>
+如果真实密钥曾经被提交过，即使后来加入 `.gitignore` 也不算安全。建议立即做三件事：
 
-### 🛠️ **方式二：本地开发环境**
+1. 到对应平台轮换或删除已经泄露的 API Key。
+2. 确认包含密钥的文件已从 Git 索引移除，例如 `git rm --cached src/backend/agentchat/config.yaml`。
+3. 如果提交历史已经包含密钥，使用 `git filter-repo` 或 BFG 清理历史后再推送。
 
-<details>
-<summary><b>👨‍💻 点击展开本地开发步骤</b></summary>
+## 本地启动
 
-#### 🔧 **后端环境搭建**
+### 1. 准备服务
 
-```bash
-# 1️⃣ 克隆项目
-git clone https://github.com/Shy2593666979/AgentChat.git
-cd AgentChat
+本地开发通常需要 MySQL、Redis，以及按配置决定是否启用 Elasticsearch、Milvus 或 ChromaDB。请确保 `src/backend/agentchat/config.yaml` 中的连接地址与实际服务一致。
 
-# 使用pip安装依赖
+### 2. 安装后端依赖
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -U pip
 pip install -r requirements.txt
 ```
 
+### 3. 启动后端
 
-#### ⚙️ **配置文件设置**
-
-创建并编辑配置文件 `src/backend/agentchat/config.yaml`:
-
-#### 🚀 **启动服务**
-
-```bash
-# 后端服务
+```powershell
 cd src/backend
-uvicorn agentchat.main:app --port 7860 --host 0.0.0.0
+uvicorn agentchat.main:app --host 0.0.0.0 --port 7860 --reload
+```
 
-# 新终端 - 前端服务
+健康检查：
+
+```text
+http://localhost:7860/health
+```
+
+### 4. 安装并启动前端
+
+```powershell
 cd src/frontend
 npm install
 npm run dev
 ```
 
-#### 🌐 **访问地址**
+默认前端地址通常为：
 
-| 🎯 **服务** | 🔗 **地址** | 📝 **说明** |
-|:---:|:---:|:---|
-| **前端界面** | [localhost:8090](http://localhost:8090) | 用户界面 |
-| **后端API** | [localhost:7860](http://localhost:7860) | API服务 |
-| **API文档** | [localhost:7860/docs](http://localhost:7860/docs) | Swagger文档 |
-
-</details>
-
-
----
-
-## 📦 高级部署指南
-
-> 🎯 **灵活的部署选择** - 从开发测试到生产环境的完整方案
-
-
-
-
-## 🔧 开发指南
-
-### ⚠️ 重要提示 (目前已单独放到与agentchat并列，不需要再额外处理)
-
-由于 `fastapi-jwt-auth` 库使用较旧版本的 Pydantic，而项目中的 LangChain、MCP 等组件需要 Pydantic >= 2，需要手动修改库文件：
-
-找到你的虚拟环境中的文件：
-```
-/path/to/your/env/lib/python3.12/site-packages/fastapi_jwt_auth/config.py
+```text
+http://localhost:5173
 ```
 
-替换为以下内容：
+### 5. 一键开发启动
 
-<details>
-<summary>点击展开配置代码</summary>
-
-```python
-from datetime import timedelta
-from typing import Optional, Union, Sequence, List
-from pydantic import (
-    BaseModel,
-    validator,
-    StrictBool,
-    StrictInt,
-    StrictStr
-)
-
-class LoadConfig(BaseModel):
-    authjwt_token_location: Optional[List[StrictStr]] = ['headers']
-    authjwt_secret_key: Optional[StrictStr] = None
-    authjwt_public_key: Optional[StrictStr] = None
-    authjwt_private_key: Optional[StrictStr] = None
-    authjwt_algorithm: Optional[StrictStr] = "HS256"
-    authjwt_decode_algorithms: Optional[List[StrictStr]] = None
-    authjwt_decode_leeway: Optional[Union[StrictInt,timedelta]] = 0
-    authjwt_encode_issuer: Optional[StrictStr] = None
-    authjwt_decode_issuer: Optional[StrictStr] = None
-    authjwt_decode_audience: Optional[Union[StrictStr,Sequence[StrictStr]]] = None
-    authjwt_denylist_enabled: Optional[StrictBool] = False
-    authjwt_denylist_token_checks: Optional[List[StrictStr]] = ['access','refresh']
-    authjwt_header_name: Optional[StrictStr] = "Authorization"
-    authjwt_header_type: Optional[StrictStr] = "Bearer"
-    authjwt_access_token_expires: Optional[Union[StrictBool,StrictInt,timedelta]] = timedelta(minutes=15)
-    authjwt_refresh_token_expires: Optional[Union[StrictBool,StrictInt,timedelta]] = timedelta(days=30)
-    # # option for create cookies
-    authjwt_access_cookie_key: Optional[StrictStr] = "access_token_cookie"
-    authjwt_refresh_cookie_key: Optional[StrictStr] = "refresh_token_cookie"
-    authjwt_access_cookie_path: Optional[StrictStr] = "/"
-    authjwt_refresh_cookie_path: Optional[StrictStr] = "/"
-    authjwt_cookie_max_age: Optional[StrictInt] = None
-    authjwt_cookie_domain: Optional[StrictStr] = None
-    authjwt_cookie_secure: Optional[StrictBool] = False
-    authjwt_cookie_samesite: Optional[StrictStr] = None
-    # # option for double submit csrf protection
-    authjwt_cookie_csrf_protect: Optional[StrictBool] = True
-    authjwt_access_csrf_cookie_key: Optional[StrictStr] = "csrf_access_token"
-    authjwt_refresh_csrf_cookie_key: Optional[StrictStr] = "csrf_refresh_token"
-    authjwt_access_csrf_cookie_path: Optional[StrictStr] = "/"
-    authjwt_refresh_csrf_cookie_path: Optional[StrictStr] = "/"
-    authjwt_access_csrf_header_name: Optional[StrictStr] = "X-CSRF-Token"
-    authjwt_refresh_csrf_header_name: Optional[StrictStr] = "X-CSRF-Token"
-    authjwt_csrf_methods: Optional[List[StrictStr]] = ['POST','PUT','PATCH','DELETE']
-
-    @validator('authjwt_access_token_expires')
-    def validate_access_token_expires(cls, v):
-        if v is True:
-            raise ValueError("The 'authjwt_access_token_expires' only accept value False (bool)")
-        return v
-
-    @validator('authjwt_refresh_token_expires')
-    def validate_refresh_token_expires(cls, v):
-        if v is True:
-            raise ValueError("The 'authjwt_refresh_token_expires' only accept value False (bool)")
-        return v
-
-    @validator('authjwt_denylist_token_checks', each_item=True)
-    def validate_denylist_token_checks(cls, v):
-        if v not in ['access','refresh']:
-            raise ValueError("The 'authjwt_denylist_token_checks' must be between 'access' or 'refresh'")
-        return v
-
-    @validator('authjwt_token_location', each_item=True)
-    def validate_token_location(cls, v):
-        if v not in ['headers','cookies']:
-            raise ValueError("The 'authjwt_token_location' must be between 'headers' or 'cookies'")
-        return v
-
-    @validator('authjwt_cookie_samesite')
-    def validate_cookie_samesite(cls, v):
-        if v not in ['strict','lax','none']:
-            raise ValueError("The 'authjwt_cookie_samesite' must be between 'strict', 'lax', 'none'")
-        return v
-
-    @validator('authjwt_csrf_methods', each_item=True)
-    def validate_csrf_methods(cls, v):
-        if v.upper() not in ["GET", "HEAD", "POST", "PUT", "DELETE", "PATCH"]:
-            raise ValueError("The 'authjwt_csrf_methods' must be between http request methods")
-        return v.upper()
-
-    class Config:
-        str_min_length = 1
-        str_strip_whitespace = True
+```powershell
+python scripts/start.py
 ```
 
-</details>
+## Docker 部署
 
-其实找起来挺麻烦的，所以提供了一个直接修改源代码的脚本
-```python
-python scripts/fix_fastapi_jwt_auth.py # 进行脚本修复(前提是需要将依赖包安装完整)
+```powershell
+Copy-Item docker/config.production.example.yaml docker/config.yaml
+Copy-Item docker/docker.env.example docker/docker.env
+cd docker
+docker compose up -d
 ```
+
+常用文件：
+
+- `docker/docker-compose.yml`：基础 Compose 配置。
+- `docker/docker-compose.prod.yml`：生产部署配置。
+- `docker/nginx.conf`：前端静态资源与后端代理配置。
+- `docker/config.production.example.yaml`：生产配置模板，不要直接写真实 key 后提交。
+- `docker/docker.env.example`：环境变量模板，不要直接写真实密码后提交。
+
+## 常用命令
+
+```powershell
+# 后端依赖
+pip install -r requirements.txt
+
+# 后端启动
+cd src/backend
+uvicorn agentchat.main:app --port 7860 --reload
+
+# 前端开发
+cd src/frontend
+npm run dev
+
+# 前端构建
+npm run build
+
+# 前端类型检查
+npm run lint
+```
+
+## 文档
+
+建议保留与代码直接相关的文档：
+
+- `docs/api.md`：接口说明。
+- `docs/database.md`：数据库结构。
+- `docs/core.md`：核心模块说明。
+- `docs/service.md`：服务层说明。
+- `docs/backend-architecture.md`：后端架构说明。
+- `docs/backend-files-analysis.md`：后端文件结构说明。
+- `docs/migration.md`：迁移记录。
+- `docs/agentchat.sql`：数据库初始化 SQL。
+
+其他本地资料已通过 `.gitignore` 隐藏，避免推送到 GitHub。
+
+## 提交前检查
+
+```powershell
+git status --short
+git diff --cached --name-only
+git grep -n -I "api_key\|secret_key\|access_key\|password\|token" -- . ":!docs/*" ":!*.example*" ":!*.md"
+```
+
+如果发现真实密钥，先移除或改成环境变量/本地配置，再提交。
+
+## License
+
+本项目使用 MIT License，详见 `LICENSE`。

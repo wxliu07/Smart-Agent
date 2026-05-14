@@ -1,17 +1,88 @@
+# Python
 __pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+build/
+dist/
+*.egg-info/
 
-.idea/
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
 
-.vscode/
+# Node / frontend
+node_modules/
+src/frontend/node_modules/
+src/frontend/dist/
+src/frontend/.vite/
+src/frontend/*.tsbuildinfo
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
 
-chat.html
-
+# Local environment and secrets
 .env
+.env.*
+*.env
 docker/.env
+docker/docker.env
 docker/config.yaml
+src/backend/agentchat/config.yaml
+*.local.yaml
+*.local.yml
+*.secret
+*.secrets
+*.pem
+*.key
 
+# Keep examples tracked
+!.env.example
+!*.env.example
+!docker/docker.env.example
+!docker/config.production.example.yaml
+!src/backend/agentchat/config.example.yaml
+
+# Runtime data
+logs/
+*.log
+chat.html
 chroma_db/
 memory_db/
 vector_db/
+.chroma/
+milvus.db
+uploads/
+tmp/
+temp/
 
-node_modules/
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Project-specific local files
+scripts/README.md
+src/frontend/DEBUGGING_GUIDE.md
+src/1.py
+
+# Docs: track only public code-level documents
+docs/*
+!docs/agentchat.md
+!docs/agentchat.sql
+!docs/api.md
+!docs/backend-architecture.md
+!docs/backend-files-analysis.md
+!docs/core.md
+!docs/database.md
+!docs/migration.md
+!docs/service.md

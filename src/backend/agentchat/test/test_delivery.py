@@ -24,10 +24,11 @@ import urllib.parse
 import ssl
 from datetime import datetime
 import pytz
+import os
 
 DELIVERY_HOST = 'https://qyexpress.market.alicloudapi.com/composite/queryexpress'
 
-DELIVERY_KEY = 'df695c94fc644d27b23c760bf425de21'
+DELIVERY_KEY = os.getenv("DELIVERY_API_KEY", "")
 
 DELIVERY_PROMPT = """
 您的{}单号为{}的信息如下:

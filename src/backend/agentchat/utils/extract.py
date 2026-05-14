@@ -1,4 +1,5 @@
 import asyncio
+import os
 
 from langchain.agents import create_agent
 from langchain_core.messages import AIMessageChunk
@@ -11,8 +12,16 @@ def get_weather(city: str) -> str:
 
     return f"It's always sunny in {city}!"
 
+qwen_api_key = os.getenv("QWEN_API_KEY", "")
+if not qwen_api_key:
+    raise RuntimeError("QWEN_API_KEY is required to run this example.")
+
 agent = create_agent(
-    model=ChatOpenAI(base_url = "https://dashscope.aliyuncs.com/compatible-mode/v1", api_key = "sk-fc40dd0604f04142a0730793ec74585f", model="qwen-plus"),
+    model=ChatOpenAI(
+        base_url="https://dashscope.aliyuncs.com/compatible-mode/v1",
+        api_key=qwen_api_key,
+        model="qwen-plus",
+    ),
     tools=[get_weather],
 )
 async def main():

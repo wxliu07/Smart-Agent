@@ -1,5 +1,6 @@
 import argparse
 import json
+import os
 
 import lark_oapi as lark
 from lark_oapi.api.contact.v3 import *
@@ -20,8 +21,8 @@ def get_id_user_request(user_id_type: str = Field("open_id", description=""),
                         app_secret: str = Field(None, description="xxxx")):
     # 创建client
     client = lark.Client.builder() \
-        .app_id("cli_axxxxxxxxxx") \
-        .app_secret("Nc1nR0xxxxxxxxxxxxxx") \
+        .app_id(os.getenv("LARK_APP_ID", "")) \
+        .app_secret(os.getenv("LARK_APP_SECRET", "")) \
         .log_level(lark.LogLevel.DEBUG) \
         .build()
 
