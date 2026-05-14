@@ -1,89 +1,135 @@
+<div align="center">
+
 # AgentChat
 
-AgentChat 是一个前后端分离的智能体对话平台。后端基于 FastAPI、LangChain、LangGraph、MCP 与 RAG 能力构建，前端基于 Vue 3、Vite、TypeScript 与 Element Plus 构建，支持多模型对话、工具调用、知识库检索、多智能体工作流、MCP 服务接入和使用量统计。
+面向多模型、多工具与知识库场景的智能体对话平台。
 
-## 功能概览
+<p>
+  <img alt="Python" src="https://img.shields.io/badge/Python-3.12+-3776AB?style=flat-square&logo=python&logoColor=white">
+  <img alt="FastAPI" src="https://img.shields.io/badge/FastAPI-0.121+-009688?style=flat-square&logo=fastapi&logoColor=white">
+  <img alt="Vue" src="https://img.shields.io/badge/Vue-3-42B883?style=flat-square&logo=vue.js&logoColor=white">
+  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5-3178C6?style=flat-square&logo=typescript&logoColor=white">
+  <img alt="License" src="https://img.shields.io/badge/License-MIT-black?style=flat-square">
+</p>
 
-- 多模型接入：支持对话模型、工具调用模型、推理模型、Embedding、Rerank、视觉模型与文生图模型的独立配置。
-- 智能体与工具：内置天气、搜索、论文检索、网页抓取、文件转换、图片理解、邮件发送、快递查询等工具，并支持自定义工具扩展。
-- RAG 知识库：支持多格式文档解析、分块、向量检索、Elasticsearch 关键词检索与召回增强问答。
-- MCP 集成：支持标准 MCP 服务和项目内置 MCP Server，便于把外部工具接入智能体运行时。
-- 用户与数据：包含用户认证、对话历史、Agent 配置、模型配置、工具配置、知识库和调用统计等模块。
-- 前端工作台：提供对话、知识库、Agent 管理、模型管理、工具管理、MCP Server、工作区和数据看板等页面。
+<p>
+  <a href="#项目简介">项目简介</a> ·
+  <a href="#核心能力">核心能力</a> ·
+  <a href="#快速开始">快速开始</a> ·
+  <a href="#安全配置">安全配置</a> ·
+  <a href="#docker-部署">Docker 部署</a>
+</p>
+
+</div>
+
+---
+
+## 项目简介
+
+AgentChat 是一个前后端分离的智能体应用平台。它把大模型对话、工具调用、RAG 知识库、MCP 服务、多智能体工作流和用量统计整合到同一套工作台中，适合用来搭建个人 AI 助手、企业知识问答、工具型 Agent、研究型搜索助手或多模型实验平台。
+
+后端使用 FastAPI、LangChain、LangGraph、MCP、SQLModel、Redis、MySQL、Elasticsearch 与向量数据库构建；前端使用 Vue 3、Vite、TypeScript、Element Plus、Pinia 与 ECharts 构建。
+
+## 核心能力
+
+| 模块 | 能力 |
+| --- | --- |
+| 多模型接入 | 独立配置对话模型、工具调用模型、推理模型、Embedding、Rerank、视觉模型与文生图模型。 |
+| 智能体工作台 | 管理 Agent、技能、工具、模型、MCP Server、会话历史、工作区任务和用量统计。 |
+| RAG 知识库 | 支持 PDF、Word、Excel、Markdown、TXT、图片等文档解析、分块、向量检索和关键词检索。 |
+| 工具调用 | 内置搜索、天气、论文检索、网页抓取、文件转换、图片理解、邮件、快递查询等工具。 |
+| MCP 集成 | 支持项目内置 MCP Server，也支持将外部 MCP 服务接入智能体运行时。 |
+| 可观测性 | 记录模型调用、Token 使用、Agent 维度统计和历史消息，便于排查与复盘。 |
+
+## 架构概览
+
+```mermaid
+flowchart LR
+  User[User] --> Frontend[Vue 3 Frontend]
+  Frontend --> API[FastAPI Backend]
+  API --> Agent[Agent Runtime]
+  Agent --> Models[LLM / Embedding / Rerank]
+  Agent --> Tools[Built-in Tools]
+  Agent --> MCP[MCP Servers]
+  API --> DB[(MySQL)]
+  API --> Cache[(Redis)]
+  API --> Search[(Elasticsearch)]
+  API --> Vector[(Milvus / ChromaDB)]
+  API --> Files[Document Parser]
+  Files --> Vector
+  Files --> Search
+```
 
 ## 技术栈
 
-后端：Python 3.12+、FastAPI、Uvicorn、LangChain、LangGraph、SQLModel、MySQL、Redis、Elasticsearch、Milvus/ChromaDB、MCP。
+| 层级 | 技术 |
+| --- | --- |
+| 后端服务 | Python 3.12+, FastAPI, Uvicorn, Pydantic, SQLModel |
+| 智能体 | LangChain, LangGraph, MCP |
+| 数据存储 | MySQL, Redis |
+| 检索增强 | Elasticsearch, Milvus, ChromaDB |
+| 前端应用 | Vue 3, Vite, TypeScript, Element Plus |
+| 前端状态与图表 | Pinia, Vue Router, Axios, ECharts |
+| 部署 | Docker, Docker Compose, Nginx |
 
-前端：Vue 3、Vite、TypeScript、Element Plus、Pinia、Vue Router、Axios、ECharts。
-
-## 项目结构
+## 目录结构
 
 ```text
 AgentChat/
-├─ docker/                         # Docker、Compose、Nginx 和生产配置模板
-├─ docs/                           # 与项目代码、接口、数据库、架构相关的文档
-├─ scripts/                        # 本地启动和维护脚本
+├─ docker/                    # Docker、Compose、Nginx 与生产配置模板
+├─ docs/                      # 公开的代码、接口、数据库与架构文档
+├─ scripts/                   # 本地启动和维护脚本
 ├─ src/
 │  ├─ backend/
 │  │  ├─ agentchat/
-│  │  │  ├─ api/                   # FastAPI 路由与接口服务
-│  │  │  ├─ config/                # 工具和 MCP 默认配置
-│  │  │  ├─ core/                  # 模型、Agent、回调等核心能力
-│  │  │  ├─ database/              # SQLModel 模型、DAO、初始化逻辑
-│  │  │  ├─ mcp_servers/           # 内置 MCP Server
-│  │  │  ├─ prompts/               # Prompt 模板
-│  │  │  ├─ schema/                # 请求/响应数据结构
-│  │  │  ├─ services/              # RAG、MCP、记忆、搜索、工作区等服务
-│  │  │  ├─ tools/                 # 内置工具实现
-│  │  │  ├─ main.py                # FastAPI 应用入口
-│  │  │  └─ settings.py            # YAML 配置加载
-│  │  └─ fastapi_jwt_auth/         # 项目内兼容版本 JWT 认证模块
+│  │  │  ├─ api/              # FastAPI 路由与接口服务
+│  │  │  ├─ config/           # 工具和 MCP 默认配置
+│  │  │  ├─ core/             # 模型、Agent、回调等核心能力
+│  │  │  ├─ database/         # SQLModel 模型、DAO 与初始化逻辑
+│  │  │  ├─ mcp_servers/      # 内置 MCP Server
+│  │  │  ├─ prompts/          # Prompt 模板
+│  │  │  ├─ schema/           # 请求与响应数据结构
+│  │  │  ├─ services/         # RAG、MCP、记忆、搜索、工作区等服务
+│  │  │  ├─ tools/            # 内置工具实现
+│  │  │  ├─ main.py           # FastAPI 应用入口
+│  │  │  └─ settings.py       # YAML 配置加载
+│  │  └─ fastapi_jwt_auth/    # 项目内兼容版本 JWT 认证模块
 │  └─ frontend/
 │     ├─ src/
-│     │  ├─ apis/                  # 前端 API 封装
-│     │  ├─ components/            # 通用组件
-│     │  ├─ pages/                 # 业务页面
-│     │  ├─ router/                # 路由
-│     │  ├─ store/                 # Pinia 状态
-│     │  └─ utils/                 # 工具函数
+│     │  ├─ apis/             # API 请求封装
+│     │  ├─ components/       # 通用组件
+│     │  ├─ pages/            # 业务页面
+│     │  ├─ router/           # 路由配置
+│     │  ├─ store/            # Pinia 状态管理
+│     │  └─ utils/            # 通用工具函数
+│     └─ package.json
 ├─ pyproject.toml
 ├─ requirements.txt
 └─ README.md
 ```
 
-## 敏感配置
+## 快速开始
 
-不要把真实 API Key、数据库密码、JWT 密钥、OSS AccessKey、Webhook Token 或任何个人配置提交到 GitHub。
+### 1. 准备基础服务
 
-本项目默认从 `src/backend/agentchat/config.yaml` 读取本地配置。该文件已被 `.gitignore` 忽略，应该只保留在本机或服务器上。首次运行时可以复制模板：
+本地开发通常需要：
+
+- MySQL
+- Redis
+- Elasticsearch，可按需关闭
+- Milvus 或 ChromaDB，可按配置选择
+
+请确保 `src/backend/agentchat/config.yaml` 中的连接地址和你的实际服务一致。
+
+### 2. 准备后端配置
 
 ```powershell
 Copy-Item src/backend/agentchat/config.example.yaml src/backend/agentchat/config.yaml
 ```
 
-然后只在 `config.yaml` 中填写真实值。Docker 部署时使用：
+然后在 `config.yaml` 中填写本地数据库、模型服务、搜索服务和对象存储配置。
 
-```powershell
-Copy-Item docker/config.production.example.yaml docker/config.yaml
-Copy-Item docker/docker.env.example docker/docker.env
-```
-
-同样只在 `docker/config.yaml` 和 `docker/docker.env` 中填写真实密钥。
-
-如果真实密钥曾经被提交过，即使后来加入 `.gitignore` 也不算安全。建议立即做三件事：
-
-1. 到对应平台轮换或删除已经泄露的 API Key。
-2. 确认包含密钥的文件已从 Git 索引移除，例如 `git rm --cached src/backend/agentchat/config.yaml`。
-3. 如果提交历史已经包含密钥，使用 `git filter-repo` 或 BFG 清理历史后再推送。
-
-## 本地启动
-
-### 1. 准备服务
-
-本地开发通常需要 MySQL、Redis，以及按配置决定是否启用 Elasticsearch、Milvus 或 ChromaDB。请确保 `src/backend/agentchat/config.yaml` 中的连接地址与实际服务一致。
-
-### 2. 安装后端依赖
+### 3. 安装后端依赖
 
 ```powershell
 python -m venv .venv
@@ -92,7 +138,7 @@ python -m pip install -U pip
 pip install -r requirements.txt
 ```
 
-### 3. 启动后端
+### 4. 启动后端
 
 ```powershell
 cd src/backend
@@ -105,7 +151,7 @@ uvicorn agentchat.main:app --host 0.0.0.0 --port 7860 --reload
 http://localhost:7860/health
 ```
 
-### 4. 安装并启动前端
+### 5. 启动前端
 
 ```powershell
 cd src/frontend
@@ -113,17 +159,36 @@ npm install
 npm run dev
 ```
 
-默认前端地址通常为：
+默认访问地址：
 
 ```text
 http://localhost:5173
 ```
 
-### 5. 一键开发启动
+### 6. 一键开发启动
+
+项目也提供了本地启动脚本：
 
 ```powershell
 python scripts/start.py
 ```
+
+## 安全配置
+
+请不要把真实 API Key、数据库密码、JWT 密钥、OSS AccessKey、Webhook Token 或任何个人配置提交到公开仓库。
+
+本项目约定：
+
+| 文件 | 用途 | 是否提交 |
+| --- | --- | --- |
+| `src/backend/agentchat/config.example.yaml` | 后端配置模板 | 是 |
+| `src/backend/agentchat/config.yaml` | 本地真实配置 | 否 |
+| `docker/config.production.example.yaml` | Docker 生产配置模板 | 是 |
+| `docker/config.yaml` | Docker 真实配置 | 否 |
+| `docker/docker.env.example` | Docker 环境变量模板 | 是 |
+| `docker/docker.env` | Docker 真实环境变量 | 否 |
+
+如果真实密钥曾经被提交过，加入 `.gitignore` 只能防止后续再次提交，不能让旧提交变安全。请立即轮换对应平台的密钥；如果公开仓库历史中已经包含密钥，还需要清理 Git 历史后再推送。
 
 ## Docker 部署
 
@@ -136,11 +201,13 @@ docker compose up -d
 
 常用文件：
 
-- `docker/docker-compose.yml`：基础 Compose 配置。
-- `docker/docker-compose.prod.yml`：生产部署配置。
-- `docker/nginx.conf`：前端静态资源与后端代理配置。
-- `docker/config.production.example.yaml`：生产配置模板，不要直接写真实 key 后提交。
-- `docker/docker.env.example`：环境变量模板，不要直接写真实密码后提交。
+| 文件 | 说明 |
+| --- | --- |
+| `docker/docker-compose.yml` | 基础 Compose 配置 |
+| `docker/docker-compose.prod.yml` | 生产部署配置 |
+| `docker/nginx.conf` | 前端静态资源与后端代理配置 |
+| `docker/config.production.example.yaml` | 生产配置模板 |
+| `docker/docker.env.example` | 环境变量模板 |
 
 ## 常用命令
 
@@ -148,7 +215,7 @@ docker compose up -d
 # 后端依赖
 pip install -r requirements.txt
 
-# 后端启动
+# 后端开发
 cd src/backend
 uvicorn agentchat.main:app --port 7860 --reload
 
@@ -163,22 +230,26 @@ npm run build
 npm run lint
 ```
 
-## 文档
+## 公开文档
 
-建议保留与代码直接相关的文档：
+仓库中保留公开的代码级文档，便于理解接口、数据库、架构和服务边界：
 
-- `docs/api.md`：接口说明。
-- `docs/database.md`：数据库结构。
-- `docs/core.md`：核心模块说明。
-- `docs/service.md`：服务层说明。
-- `docs/backend-architecture.md`：后端架构说明。
-- `docs/backend-files-analysis.md`：后端文件结构说明。
-- `docs/migration.md`：迁移记录。
-- `docs/agentchat.sql`：数据库初始化 SQL。
+| 文档 | 说明 |
+| --- | --- |
+| `docs/api.md` | API 接口说明 |
+| `docs/database.md` | 数据库结构说明 |
+| `docs/core.md` | 核心模块说明 |
+| `docs/service.md` | 服务层说明 |
+| `docs/backend-architecture.md` | 后端架构说明 |
+| `docs/backend-files-analysis.md` | 后端文件结构说明 |
+| `docs/migration.md` | 迁移记录 |
+| `docs/agentchat.sql` | 数据库初始化 SQL |
 
-其他本地资料已通过 `.gitignore` 隐藏，避免推送到 GitHub。
+其他本地资料默认不进入公开仓库。
 
 ## 提交前检查
+
+提交前建议执行：
 
 ```powershell
 git status --short
@@ -186,8 +257,8 @@ git diff --cached --name-only
 git grep -n -I "api_key\|secret_key\|access_key\|password\|token" -- . ":!docs/*" ":!*.example*" ":!*.md"
 ```
 
-如果发现真实密钥，先移除或改成环境变量/本地配置，再提交。
+如果发现真实密钥，请先移除或改成本地配置/环境变量后再提交。
 
 ## License
 
-本项目使用 MIT License，详见 `LICENSE`。
+本项目基于 MIT License 开源，详见 `LICENSE`。
